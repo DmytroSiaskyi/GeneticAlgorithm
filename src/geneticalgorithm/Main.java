@@ -19,6 +19,8 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 800, 540));
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(540);
+
+
         Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
         primaryStage.getIcons().add(icon);
         primaryStage.show();

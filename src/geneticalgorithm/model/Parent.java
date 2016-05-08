@@ -2,14 +2,17 @@ package geneticalgorithm.model;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.List;
 
 /**
  * @author Dmytro Siaskyi dmitry.syaskiy@gmail.com.
  */
 public class Parent {
 
-    private ObservableList<Integer> gene;
+    private ObservableList<Integer> chromosome;
     private IntegerProperty weight;
     private IntegerProperty utility;
 
@@ -24,22 +27,36 @@ public class Parent {
     /**
      * Constructor with parameters
      *
-     * @param gene
+     * @param chromosome
      * @param weight
      * @param utility
      */
-    public Parent(ObservableList<Integer> gene, Integer weight, Integer utility){
-        this.gene = gene;
+    public Parent(ObservableList<Integer> chromosome, Integer weight, Integer utility){
+        this.chromosome = chromosome;
         this.weight = new SimpleIntegerProperty(weight);
         this.utility = new SimpleIntegerProperty(utility);
     }
-
-    public ObservableList<Integer> getGene() {
-        return gene;
+    @Override
+    public boolean equals(Object o){
+        if(o == null)
+            return false;
+        Parent parent = (Parent)o;
+        if((parent.getUtility() == this.utility.intValue())&&(parent.getWeight() == this.weight.intValue())){
+            return true;
+        }
+        return false;
+    }
+    public ObservableList<Integer> getChromosome() {
+        return chromosome;
     }
 
-    public void setGene(ObservableList<Integer> gene) {
-        this.gene = gene;
+    public void setChromosome(ObservableList<Integer> chromosome) {
+        this.chromosome = chromosome;
+    }
+
+    public void setChromosomeList(List<Integer> chromosomeList){
+        chromosome = FXCollections.observableArrayList();
+        chromosomeList.forEach(gene -> chromosome.add(gene));
     }
 
     public int getWeight() {
