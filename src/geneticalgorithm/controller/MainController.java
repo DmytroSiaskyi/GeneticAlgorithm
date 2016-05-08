@@ -3,8 +3,9 @@ package geneticalgorithm.controller;
 import geneticalgorithm.model.GeneticAlgorithmSolver;
 import geneticalgorithm.model.Parent;
 import geneticalgorithm.model.Thing;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -34,28 +35,42 @@ public class MainController {
     private Button startButton;
     @FXML
     private Button generateDataButton;
+    @FXML
+    private ChoiceBox<String> crossingPoints;
+    @FXML
+    private ChoiceBox<String> parentsChoice;
 
     private GeneticAlgorithmSolver gas;
     private List<TableColumn<Parent, Integer>> columns;
 
     @FXML
     public void initialize(){
-        generateDataButton.setOnAction(e -> generateData());
+        crossingPoints.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
+        parentsChoice.setItems(FXCollections.observableArrayList("Variant 1", "Variant2"));
+        generateDataButton.setOnAction(e -> generateTaskData());
         startButton.setOnAction(e-> System.out.println("test"));
     }
-    private void generateData(){
+
+    private void generateTaskData(){
         gas = new GeneticAlgorithmSolver();
-        thingsTable.setItems(gas.getThings());
-        thingName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        thingUtility.setCellValueFactory(cellData -> cellData.getValue().utilityProperty().asObject());
-        thingWeight.setCellValueFactory(cellData -> cellData.getValue().weightProperty().asObject());
+
+        initializeThingsTable(gas.getThings());
         initializeParentsTable(gas.getParents());
         maxWeight.setText(gas.getBackpackMaxWeight().toString());
     }
+
+    private void initializeThingsTable(ObservableList<Thing> things){
+        thingsTable.setItems(things);
+        thingName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        thingUtility.setCellValueFactory(cellData -> cellData.getValue().utilityProperty().asObject());
+        thingWeight.setCellValueFactory(cellData -> cellData.getValue().weightProperty().asObject());
+    }
+
     private void initializeParentsTable(ObservableList<Parent> parents){
-        int size = gas.getThings().size();
         parentsTable.setItems(gas.getParents());
+
         if(columns == null) {
+            int size = gas.getThings().size();
             TableColumn column;
             columns = new ArrayList<>();
             for (int i = 0; i < size; i++) {

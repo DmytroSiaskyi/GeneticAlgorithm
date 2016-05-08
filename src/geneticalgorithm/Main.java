@@ -17,10 +17,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("view/mainView.fxml"));
         primaryStage.setTitle("Генетичний алгоритм");
         primaryStage.setScene(new Scene(root, 800, 540));
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(540);
-
-
+        primaryStage.setResizable(false);
         Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
         primaryStage.getIcons().add(icon);
         primaryStage.show();

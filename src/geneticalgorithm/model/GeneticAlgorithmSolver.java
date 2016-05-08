@@ -15,12 +15,14 @@ public class GeneticAlgorithmSolver {
     private Integer backpackMaxWeight;
     private ObservableList<Thing> things;
     private ObservableList<Parent> parents;
+    private Integer crossingPoints;
 
     /**
      * Default constructor.
      */
     public GeneticAlgorithmSolver(){
         int size = 10;
+        crossingPoints = size / 5;
         Random random = new Random();
         backpackMaxWeight = (random.nextInt(5) + 3) * 100;
         things = FXCollections.observableArrayList();
@@ -41,6 +43,28 @@ public class GeneticAlgorithmSolver {
             parents.add(parent);
         }
     }
+
+    /**
+     * Constructor with parameters
+     *
+     * @param backpackMaxWeight
+     * @param things
+     * @param parents
+     */
+    public GeneticAlgorithmSolver(Integer backpackMaxWeight, List<Thing> things, List<Parent> parents){
+        this.backpackMaxWeight = backpackMaxWeight;
+        this.things = FXCollections.observableArrayList();
+        this.parents = FXCollections.observableArrayList();
+        things.forEach(thing -> this.things.add(thing));
+        parents.forEach(parent -> this.parents.add(parent));
+    }
+
+    /**
+     * Create one random parent
+     *
+     * @param size
+     * @param random
+     */
     private Parent generateParent(int size, Random random){
         Parent result;
         int weight = 0;
