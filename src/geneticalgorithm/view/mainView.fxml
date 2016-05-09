@@ -12,9 +12,9 @@
         <menus>
           <Menu mnemonicParsing="false" text="Файл">
             <items>
-              <MenuItem mnemonicParsing="false" text="Відкрити" />
-                  <MenuItem mnemonicParsing="false" text="Зберегти початкові дані" />
-                  <MenuItem mnemonicParsing="false" text="Завершити роботу" />
+                  <MenuItem fx:id="openItem" mnemonicParsing="false" text="Відкрити" />
+                  <MenuItem fx:id="saveItem" mnemonicParsing="false" text="Зберегти початкові дані" />
+                  <MenuItem fx:id="exitItem" mnemonicParsing="false" text="Завершити роботу" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Допомога">
@@ -25,10 +25,14 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Pane layoutX="462.0" layoutY="485.0" prefHeight="41.0" prefWidth="324.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+      <Pane layoutX="199.0" layoutY="483.0" prefHeight="41.0" prefWidth="765.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="18.0">
          <children>
-            <CheckBox layoutY="12.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="187.0" text="Відображати кожну ітерацію" />
-            <Button fx:id="startButton" layoutX="198.0" layoutY="8.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="112.0" text="Старт" />
+            <CheckBox fx:id="iterationDisplaying" layoutX="437.0" layoutY="12.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="187.0" text="Відображати кожну ітерацію" />
+            <Button fx:id="startButton" layoutX="640.0" layoutY="8.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="112.0" text="Старт">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <Button fx:id="generateDataButton" layoutY="8.0" mnemonicParsing="false" text="Згенерувати вхідні дані задачі" />
          </children>
       </Pane>
       <Pane layoutX="293.0" layoutY="32.0" prefHeight="214.0" AnchorPane.leftAnchor="302.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="32.0">
@@ -98,7 +102,7 @@
                   <Insets right="10.0" />
                </padding>
             </Label>
-            <TextField />
+            <TextField fx:id="crossingPoints" />
             <Label text="Точки кросинговеру">
                <font>
                   <Font size="14.0" />
@@ -107,7 +111,7 @@
                   <Insets left="20.0" right="52.0" />
                </padding>
             </Label>
-            <CheckBox mnemonicParsing="false" prefHeight="32.0" prefWidth="172.0" text="постійні">
+            <CheckBox fx:id="staticCrossingPoints" mnemonicParsing="false" prefHeight="32.0" prefWidth="172.0" text="постійні">
                <font>
                   <Font size="14.0" />
                </font>
@@ -120,7 +124,7 @@
                   <Insets right="55.0" />
                </padding>
             </Label>
-            <ChoiceBox fx:id="crossingPoints" prefWidth="150.0" />
+            <ChoiceBox fx:id="mutationPoints" prefWidth="150.0" />
             <Label text="Інверсія при мутації">
                <font>
                   <Font size="14.0" />
@@ -129,7 +133,7 @@
                   <Insets left="20.0" right="55.0" />
                </padding>
             </Label>
-            <CheckBox mnemonicParsing="false" text="дозволити">
+            <CheckBox fx:id="mutationInversion" mnemonicParsing="false" text="дозволити">
                <font>
                   <Font size="14.0" />
                </font>
@@ -151,7 +155,6 @@
             <Insets />
          </opaqueInsets>
       </FlowPane>
-      <Button fx:id="generateDataButton" layoutX="17.0" layoutY="491.0" mnemonicParsing="false" text="Згенерувати вхідні дані задачі" />
       <Separator layoutX="18.0" layoutY="480.0" prefHeight="0.0" prefWidth="765.0" />
    </children>
 </AnchorPane>

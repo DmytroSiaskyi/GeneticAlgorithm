@@ -9,10 +9,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * @author Dmytro Siaskyi dmitry.syaskiy@gmail.com.
@@ -32,31 +36,63 @@ public class MainController {
     @FXML
     private TextField maxWeight;
     @FXML
+    private TextField crossingPoints;
+    @FXML
+    private TextField iterNumber;
+    @FXML
+    private CheckBox staticCrossingPoints;
+    @FXML
     private Button startButton;
     @FXML
     private Button generateDataButton;
     @FXML
-    private ChoiceBox<String> crossingPoints;
+    private ChoiceBox<String> mutationPoints;
     @FXML
     private ChoiceBox<String> parentsChoice;
+    @FXML
+    private MenuItem openItem;
+    @FXML
+    private MenuItem saveItem;
+    @FXML
+    private MenuItem exitItem;
 
     private GeneticAlgorithmSolver gas;
     private List<TableColumn<Parent, Integer>> columns;
 
     @FXML
     public void initialize(){
-        crossingPoints.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
-        parentsChoice.setItems(FXCollections.observableArrayList("Variant 1", "Variant2"));
+        mutationPoints.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
+        parentsChoice.setItems(FXCollections.observableArrayList("Панміксія", "Імбридинг", "Аутбридинг", "Селекція", "Метод рулетки"));
         generateDataButton.setOnAction(e -> generateTaskData());
+        openItem.setOnAction(e -> openTask());
+        saveItem.setOnAction(e -> saveTask());
+        exitItem.setOnAction(e -> exitProgram());
         startButton.setOnAction(e-> System.out.println("test"));
     }
+    private void openTask(){
 
+    }
+    private void saveTask(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Task");
+        File file = fileChooser.showSaveDialog((Stage) startButton.getScene().getWindow());
+        if (file != null) {
+
+        }
+    }
+    private void exitProgram(){
+
+    }
     private void generateTaskData(){
         gas = new GeneticAlgorithmSolver();
-
+        parentsChoice.setValue(parentsChoice.getItems().get(0));
         initializeThingsTable(gas.getThings());
         initializeParentsTable(gas.getParents());
         maxWeight.setText(gas.getBackpackMaxWeight().toString());
+        crossingPoints.setText(gas.getCrossingPoints() + "");
+        mutationPoints.setValue(mutationPoints.getItems().get(gas.getMutationPoints().size()-1));
+        iterNumber.setText(gas.getIterations() + "");
+        staticCrossingPoints.setSelected(true);
     }
 
     private void initializeThingsTable(ObservableList<Thing> things){

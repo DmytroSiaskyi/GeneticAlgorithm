@@ -16,7 +16,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("view/mainView.fxml"));
         primaryStage.setTitle("Генетичний алгоритм");
-        primaryStage.setScene(new Scene(root, 800, 540));
+        primaryStage.setScene(new Scene(root, 800, 538));
         primaryStage.setResizable(false);
         Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
         primaryStage.getIcons().add(icon);

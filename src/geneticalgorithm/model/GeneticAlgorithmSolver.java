@@ -12,25 +12,41 @@ import java.util.Random;
  */
 public class GeneticAlgorithmSolver {
 
-    private Integer backpackMaxWeight;
     private ObservableList<Thing> things;
     private ObservableList<Parent> parents;
     private Integer crossingPoints;
+    private Integer backpackMaxWeight;
+    private Integer iterations;
+    private String parentsChoiceMethod;
+    private Boolean staticCrossingPoints;
+    private List<Integer> mutationPoints;
 
     /**
      * Default constructor.
      */
     public GeneticAlgorithmSolver(){
-        int size = 10;
-        crossingPoints = size / 5;
         Random random = new Random();
+        int size = 10;
+        int mutationPointsNumber;
+        staticCrossingPoints = true;
+        parentsChoiceMethod = "Панміксія";
+        crossingPoints = mutationPointsNumber= size / 5;
+        mutationPoints = new ArrayList<>();
+        int mutationElement;
+        for(int i = 0; i < mutationPointsNumber; i++){
+            do{
+                mutationElement = random.nextInt(size);
+            }while (mutationPoints.indexOf(mutationElement) != -1);
+            mutationPoints.add(mutationElement);
+        }
+        iterations = random.nextInt(5) + 3;
         backpackMaxWeight = (random.nextInt(5) + 3) * 100;
         things = FXCollections.observableArrayList();
         parents = FXCollections.observableArrayList();
         int weight, utility;
         for(int i = 0; i < size; i++){
             weight = (random.nextInt(backpackMaxWeight/30) + 5) * 10;
-            utility = random.nextInt(backpackMaxWeight);
+            utility = random.nextInt(backpackMaxWeight) + 10;
             Thing thing = new Thing("C" + i, weight, utility);
             things.add(thing);
         }
@@ -92,6 +108,46 @@ public class GeneticAlgorithmSolver {
 
     public void countInduvidualData(Parent parent){
 
+    }
+
+    public List<Integer> getMutationPoints() {
+        return mutationPoints;
+    }
+
+    public void setMutationPoints(List<Integer> mutationPoints) {
+        this.mutationPoints = mutationPoints;
+    }
+
+    public Boolean getStaticCrossingPoints() {
+        return staticCrossingPoints;
+    }
+
+    public void setStaticCrossingPoints(Boolean staticCrossingPoints) {
+        this.staticCrossingPoints = staticCrossingPoints;
+    }
+
+    public String getParentsChoiceMethod() {
+        return parentsChoiceMethod;
+    }
+
+    public void setParentsChoiceMethod(String parentsChoiceMethod) {
+        this.parentsChoiceMethod = parentsChoiceMethod;
+    }
+
+    public Integer getIterations() {
+        return iterations;
+    }
+
+    public void setIterations(Integer iterations) {
+        this.iterations = iterations;
+    }
+
+    public Integer getCrossingPoints() {
+        return crossingPoints;
+    }
+
+    public void setCrossingPoints(Integer crossingPoints) {
+        this.crossingPoints = crossingPoints;
     }
 
     public Integer getBackpackMaxWeight() {
