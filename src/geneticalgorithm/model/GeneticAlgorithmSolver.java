@@ -14,14 +14,15 @@ public class GeneticAlgorithmSolver {
 
     private ObservableList<Thing> things;
     private ObservableList<Parent> parents;
-    private Integer crossingPoints;
     private List<Integer> crossingPointsList;
+    private List<Integer> mutationPoints;
     private Integer backpackMaxWeight;
     private Integer iterations;
     private String parentsChoiceMethod;
     private Boolean staticCrossingPoints;
     private Boolean mutationInversion;
-    private List<Integer> mutationPoints;
+
+    private Integer crossingPoints;
 
     /**
      * Default constructor.
@@ -30,12 +31,13 @@ public class GeneticAlgorithmSolver {
         Random random = new Random();
         int size = 10;
         int mutationPointsNumber;
-        staticCrossingPoints = true;
+        iterations = random.nextInt(5) + 3;
+        backpackMaxWeight = (random.nextInt(5) + 3) * 100;
         parentsChoiceMethod = "Панміксія";
-        crossingPoints = mutationPointsNumber= size / 5;
-        mutationPoints = new ArrayList<>();
-        mutationInversion = false;
+
         crossingPointsList = new ArrayList<>();
+        crossingPoints = mutationPointsNumber= size / 5;
+        staticCrossingPoints = true;
         int newCrossPoint;
         for(int i = 0; i < crossingPoints; i++){
             do{
@@ -43,6 +45,9 @@ public class GeneticAlgorithmSolver {
             }while(crossingPointsList.indexOf(newCrossPoint + 1) != -1 && crossingPointsList.indexOf(newCrossPoint - 1) != -1);
             crossingPointsList.add(newCrossPoint);
         }
+
+        mutationInversion = false;
+        mutationPoints = new ArrayList<>();
         int mutationElement;
         for(int i = 0; i < mutationPointsNumber; i++){
             do{
@@ -50,10 +55,8 @@ public class GeneticAlgorithmSolver {
             }while (mutationPoints.indexOf(mutationElement) != -1);
             mutationPoints.add(mutationElement);
         }
-        iterations = random.nextInt(5) + 3;
-        backpackMaxWeight = (random.nextInt(5) + 3) * 100;
+
         things = FXCollections.observableArrayList();
-        parents = FXCollections.observableArrayList();
         int weight, utility;
         for(int i = 0; i < size; i++){
             weight = (random.nextInt(backpackMaxWeight/30) + 5) * 10;
@@ -62,6 +65,7 @@ public class GeneticAlgorithmSolver {
             things.add(thing);
         }
 
+        parents = FXCollections.observableArrayList();
         Parent parent;
         for(int i = 0; i < size; i++){
             do {
@@ -74,16 +78,28 @@ public class GeneticAlgorithmSolver {
     /**
      * Constructor with parameters
      *
-     * @param backpackMaxWeight
      * @param things
      * @param parents
+     * @param backpackMaxWeight
+     * @param crossingPoints
+     * @param mutationPoints
+     * @param iterations
+     * @param parentsChoiceMethod
+     * @param staticCrossingPoints
+     * @param mutationInversion
      */
-    public GeneticAlgorithmSolver(Integer backpackMaxWeight, List<Thing> things, List<Parent> parents){
+    public GeneticAlgorithmSolver(ObservableList<Thing> things, ObservableList<Parent> parents, Integer backpackMaxWeight,
+                                  List<Integer> crossingPoints, List<Integer> mutationPoints, Integer iterations, String parentsChoiceMethod,
+                                  Boolean staticCrossingPoints, Boolean mutationInversion){
+        this.things = things;
+        this.parents = parents;
         this.backpackMaxWeight = backpackMaxWeight;
-        this.things = FXCollections.observableArrayList();
-        this.parents = FXCollections.observableArrayList();
-        things.forEach(thing -> this.things.add(thing));
-        parents.forEach(parent -> this.parents.add(parent));
+        this.crossingPointsList = crossingPoints;
+        this.mutationPoints = mutationPoints;
+        this.iterations = iterations;
+        this.parentsChoiceMethod = parentsChoiceMethod;
+        this.staticCrossingPoints = staticCrossingPoints;
+        this.mutationInversion = mutationInversion;
     }
 
     /**
@@ -115,10 +131,6 @@ public class GeneticAlgorithmSolver {
         result.setWeight(weight);
         result.setChromosomeList(chromosome);
         return result;
-    }
-
-    public void countInduvidualData(Parent parent){
-
     }
 
     public Boolean getMutationInversion() {
@@ -200,4 +212,5 @@ public class GeneticAlgorithmSolver {
     public void setThings(ObservableList<Thing> things) {
         this.things = things;
     }
+
 }

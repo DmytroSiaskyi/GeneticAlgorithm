@@ -62,6 +62,9 @@ public class MainController {
     private GeneticAlgorithmSolver gas;
     private List<TableColumn<Parent, Integer>> columns;
 
+    /**
+     * Initialize controller and stage
+     */
     @FXML
     public void initialize(){
         mutationPoints.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
@@ -70,29 +73,68 @@ public class MainController {
         openItem.setOnAction(e -> openTask());
         saveItem.setOnAction(e -> saveTask());
         exitItem.setOnAction(e -> exitProgram());
-        startButton.setOnAction(e-> System.out.println("test"));
+        startButton.setOnAction(e-> solve());
     }
+
+    /**
+     * Solving backpack task with generated or readen task data
+     */
+    private void solve(){
+        String test = updateTask();
+        if(test.equals("success")){
+            System.out.println("Start");
+            //solving task
+        }else{
+            AlertBox.display("Помилка", test);
+        }
+    }
+
+    /**
+     * Update task data from stage
+     */
+    private String updateTask(){
+        String result = "success";
+
+        return result;
+    }
+
+    /**
+     * Open task from .txt file
+     *
+     */
     private void openTask(){
 
     }
+
+    /**
+     * Save task data to .txt file
+     */
     private void saveTask(){
         if(gas != null) {
+            String test = updateTask();
+            if(!test.equals("success")){
+                AlertBox.display("Помилка", test);
+                return;
+            }
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Зберегти умову завдання");
             File file = fileChooser.showSaveDialog((Stage) startButton.getScene().getWindow());
+            String buffer = new String();
             if (file != null) {
                 try {
-                    String buffer = new String();
                     File newFile = new File(file.getPath() + ".txt");
                     newFile.createNewFile();
                     FileWriter fw = new FileWriter(newFile.getAbsoluteFile());
                     BufferedWriter bw = new BufferedWriter(fw);
+
                     buffer = "Максимальна вага рюкзака: " + gas.getBackpackMaxWeight();
                     bw.write(buffer);
                     bw.newLine();
+
                     buffer = "Оператор вибору батьків: " + gas.getParentsChoiceMethod();
                     bw.write(buffer);
                     bw.newLine();
+
                     buffer = "Точки кросинговеру: ";
                     List<Integer> crossingPoints = gas.getCrossingPointsList();
                     for(int i = 0; i < crossingPoints.size(); i++){
@@ -100,9 +142,11 @@ public class MainController {
                     }
                     bw.write(buffer);
                     bw.newLine();
+
                     buffer = "Постійність точок кросинговеру: " + gas.getStaticCrossingPoints();
                     bw.write(buffer);
                     bw.newLine();
+
                     buffer = "Точки мутації: ";
                     List<Integer> mutationPoints = gas.getMutationPoints();
                     for(int i = 0; i < mutationPoints.size(); i++){
@@ -110,12 +154,42 @@ public class MainController {
                     }
                     bw.write(buffer);
                     bw.newLine();
+
                     buffer = "Інверсія при мутації: " + gas.getMutationInversion();
                     bw.write(buffer);
                     bw.newLine();
+
                     buffer = "Кількість ітерацій: " + gas.getIterations();
                     bw.write(buffer);
                     bw.newLine();
+
+                    buffer = "Набір предметів(назва, корисність, вага): ";
+                    bw.write(buffer);
+                    bw.newLine();
+
+                    List<Thing> things = gas.getThings();
+                    for(int i = 0; i < things.size(); i++){
+                        buffer = things.get(i).getName() + " " + things.get(i).getUtility() + " " + things.get(i).getWeight();
+                        bw.write(buffer);
+                        bw.newLine();
+                    }
+                    bw.write(buffer);
+                    bw.newLine();
+
+                    List<Parent> parents = gas.getParents();
+                    buffer = "Набір предків(хромосома, вага, корисність): ";
+                    bw.write(buffer);
+                    bw.newLine();
+                    for(int i = 0; i < parents.size(); i++){
+                        Parent parent = parents.get(i);
+                        buffer = new String();
+                        for(int j = 0; j < things.size(); j ++){
+                            buffer += parent.getChromosome().get(j) + " ";
+                        }
+                        buffer += parent.getWeight() + " " + parent.getUtility();
+                        bw.write(buffer);
+                        bw.newLine();
+                    }
 
                     bw.close();
                 } catch (IOException e) {
@@ -129,11 +203,19 @@ public class MainController {
                     "Для коректного збереження необхідно заповнити всі поля, згенерувати\nабо зчитати початкову популяцію і набір предметів.");
         }
     }
+
+    /**
+     * Close program with user confirm
+     */
     private void exitProgram(){
         if(ConfirmBox.display("Завершення роботи", "Всі не збережені дані зникнуть по завершенню. Ви впевнені, що хочете завершити роботу з програмою?")){
             Platform.exit();
         }
     }
+
+    /**
+     * Generate task with task details
+     */
     private void generateTaskData(){
         gas = new GeneticAlgorithmSolver();
         parentsChoice.setValue(parentsChoice.getItems().get(0));
@@ -145,7 +227,11 @@ public class MainController {
         iterNumber.setText(gas.getIterations() + "");
         staticCrossingPoints.setSelected(true);
     }
-
+    /**
+     * Initialize things table data
+     *
+     * @param things
+     */
     private void initializeThingsTable(ObservableList<Thing> things){
         thingsTable.setItems(things);
         thingName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -153,9 +239,13 @@ public class MainController {
         thingWeight.setCellValueFactory(cellData -> cellData.getValue().weightProperty().asObject());
     }
 
+    /**
+     * Initialize or update parents table data
+     *
+     * @param parents
+     */
     private void initializeParentsTable(ObservableList<Parent> parents){
         parentsTable.setItems(gas.getParents());
-
         if(columns == null) {
             int size = gas.getThings().size();
             TableColumn column;
