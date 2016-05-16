@@ -14,7 +14,9 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,13 +82,42 @@ public class MainController {
             File file = fileChooser.showSaveDialog((Stage) startButton.getScene().getWindow());
             if (file != null) {
                 try {
+                    String buffer = new String();
                     File newFile = new File(file.getPath() + ".txt");
-                    if (newFile.createNewFile()) {
-                        System.out.println("File is created!");
-                    } else {
-                        System.out.println("File already exists.");
+                    newFile.createNewFile();
+                    FileWriter fw = new FileWriter(newFile.getAbsoluteFile());
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    buffer = "Максимальна вага рюкзака: " + gas.getBackpackMaxWeight();
+                    bw.write(buffer);
+                    bw.newLine();
+                    buffer = "Оператор вибору батьків: " + gas.getParentsChoiceMethod();
+                    bw.write(buffer);
+                    bw.newLine();
+                    buffer = "Точки кросинговеру: ";
+                    List<Integer> crossingPoints = gas.getCrossingPointsList();
+                    for(int i = 0; i < crossingPoints.size(); i++){
+                        buffer += crossingPoints.get(i) + " ";
                     }
+                    bw.write(buffer);
+                    bw.newLine();
+                    buffer = "Постійність точок кросинговеру: " + gas.getStaticCrossingPoints();
+                    bw.write(buffer);
+                    bw.newLine();
+                    buffer = "Точки мутації: ";
+                    List<Integer> mutationPoints = gas.getMutationPoints();
+                    for(int i = 0; i < mutationPoints.size(); i++){
+                        buffer += mutationPoints.get(i) + " ";
+                    }
+                    bw.write(buffer);
+                    bw.newLine();
+                    buffer = "Інверсія при мутації: " + gas.getMutationInversion();
+                    bw.write(buffer);
+                    bw.newLine();
+                    buffer = "Кількість ітерацій: " + gas.getIterations();
+                    bw.write(buffer);
+                    bw.newLine();
 
+                    bw.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -95,7 +126,7 @@ public class MainController {
             }
         }else{
             AlertBox.display("Помилка", "Не можливо зберегти початкову умову задачі!\n" +
-                    " Для коректного збереження необхідно заповнити всі поля, згенерувати\n або зчитати початкову популяцію і набір предметів.");
+                    "Для коректного збереження необхідно заповнити всі поля, згенерувати\nабо зчитати початкову популяцію і набір предметів.");
         }
     }
     private void exitProgram(){

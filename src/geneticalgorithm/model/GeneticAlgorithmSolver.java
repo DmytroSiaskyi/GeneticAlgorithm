@@ -15,10 +15,12 @@ public class GeneticAlgorithmSolver {
     private ObservableList<Thing> things;
     private ObservableList<Parent> parents;
     private Integer crossingPoints;
+    private List<Integer> crossingPointsList;
     private Integer backpackMaxWeight;
     private Integer iterations;
     private String parentsChoiceMethod;
     private Boolean staticCrossingPoints;
+    private Boolean mutationInversion;
     private List<Integer> mutationPoints;
 
     /**
@@ -32,6 +34,15 @@ public class GeneticAlgorithmSolver {
         parentsChoiceMethod = "Панміксія";
         crossingPoints = mutationPointsNumber= size / 5;
         mutationPoints = new ArrayList<>();
+        mutationInversion = false;
+        crossingPointsList = new ArrayList<>();
+        int newCrossPoint;
+        for(int i = 0; i < crossingPoints; i++){
+            do{
+                newCrossPoint = random.nextInt(size - 1);
+            }while(crossingPointsList.indexOf(newCrossPoint + 1) != -1 && crossingPointsList.indexOf(newCrossPoint - 1) != -1);
+            crossingPointsList.add(newCrossPoint);
+        }
         int mutationElement;
         for(int i = 0; i < mutationPointsNumber; i++){
             do{
@@ -108,6 +119,22 @@ public class GeneticAlgorithmSolver {
 
     public void countInduvidualData(Parent parent){
 
+    }
+
+    public Boolean getMutationInversion() {
+        return mutationInversion;
+    }
+
+    public void setMutationInversion(Boolean mutationInversion) {
+        this.mutationInversion = mutationInversion;
+    }
+
+    public List<Integer> getCrossingPointsList() {
+        return crossingPointsList;
+    }
+
+    public void setCrossingPointsList(List<Integer> crossingPointsList) {
+        this.crossingPointsList = crossingPointsList;
     }
 
     public List<Integer> getMutationPoints() {
