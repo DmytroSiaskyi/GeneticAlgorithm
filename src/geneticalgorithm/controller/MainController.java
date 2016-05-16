@@ -1,8 +1,10 @@
 package geneticalgorithm.controller;
 
+import geneticalgorithm.ConfirmBox;
 import geneticalgorithm.model.GeneticAlgorithmSolver;
 import geneticalgorithm.model.Parent;
 import geneticalgorithm.model.Thing;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -74,14 +76,28 @@ public class MainController {
     }
     private void saveTask(){
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Task");
+        fileChooser.setTitle("Зберегти умову завдання");
         File file = fileChooser.showSaveDialog((Stage) startButton.getScene().getWindow());
         if (file != null) {
+            try {
+                File newFile = new File(file.getPath() + ".txt");
+                if (newFile.createNewFile()) {
+                    System.out.println("File is created!");
+                } else {
+                    System.out.println("File already exists.");
+                }
 
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }else{
+            System.out.println("Error, can't create file!");
         }
     }
     private void exitProgram(){
-
+        if(ConfirmBox.display("Завершення роботи", "Всі не збережені дані зникнуть по завершенню. Ви впевнені, що хочете завершити роботу з програмою?")){
+            Platform.exit();
+        }
     }
     private void generateTaskData(){
         gas = new GeneticAlgorithmSolver();
