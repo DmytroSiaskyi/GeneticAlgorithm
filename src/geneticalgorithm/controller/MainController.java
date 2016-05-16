@@ -1,12 +1,12 @@
 package geneticalgorithm.controller;
 
+import geneticalgorithm.AlertBox;
 import geneticalgorithm.ConfirmBox;
 import geneticalgorithm.model.GeneticAlgorithmSolver;
 import geneticalgorithm.model.Parent;
 import geneticalgorithm.model.Thing;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * @author Dmytro Siaskyi dmitry.syaskiy@gmail.com.
@@ -75,23 +74,28 @@ public class MainController {
 
     }
     private void saveTask(){
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Зберегти умову завдання");
-        File file = fileChooser.showSaveDialog((Stage) startButton.getScene().getWindow());
-        if (file != null) {
-            try {
-                File newFile = new File(file.getPath() + ".txt");
-                if (newFile.createNewFile()) {
-                    System.out.println("File is created!");
-                } else {
-                    System.out.println("File already exists.");
-                }
+        if(gas != null) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Зберегти умову завдання");
+            File file = fileChooser.showSaveDialog((Stage) startButton.getScene().getWindow());
+            if (file != null) {
+                try {
+                    File newFile = new File(file.getPath() + ".txt");
+                    if (newFile.createNewFile()) {
+                        System.out.println("File is created!");
+                    } else {
+                        System.out.println("File already exists.");
+                    }
 
-            }catch (IOException e){
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Error, can't create file!");
             }
         }else{
-            System.out.println("Error, can't create file!");
+            AlertBox.display("Помилка", "Не можливо зберегти початкову умову задачі!\n" +
+                    " Для коректного збереження необхідно заповнити всі поля, згенерувати\n або зчитати початкову популяцію і набір предметів.");
         }
     }
     private void exitProgram(){
