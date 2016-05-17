@@ -38,23 +38,10 @@ public class GeneticAlgorithmSolver {
         crossingPointsList = new ArrayList<>();
         crossingPoints = mutationPointsNumber= size / 5;
         staticCrossingPoints = true;
-        int newCrossPoint;
-        for(int i = 0; i < crossingPoints; i++){
-            do{
-                newCrossPoint = random.nextInt(size - 1);
-            }while(crossingPointsList.indexOf(newCrossPoint + 1) != -1 && crossingPointsList.indexOf(newCrossPoint - 1) != -1);
-            crossingPointsList.add(newCrossPoint);
-        }
+        generateCrossingPoints(crossingPoints, size);
 
         mutationInversion = false;
-        mutationPoints = new ArrayList<>();
-        int mutationElement;
-        for(int i = 0; i < mutationPointsNumber; i++){
-            do{
-                mutationElement = random.nextInt(size);
-            }while (mutationPoints.indexOf(mutationElement) != -1);
-            mutationPoints.add(mutationElement);
-        }
+        generateMutationPoints(mutationPointsNumber, size);
 
         things = FXCollections.observableArrayList();
         int weight, utility;
@@ -100,6 +87,41 @@ public class GeneticAlgorithmSolver {
         this.parentsChoiceMethod = parentsChoiceMethod;
         this.staticCrossingPoints = staticCrossingPoints;
         this.mutationInversion = mutationInversion;
+    }
+
+    /**
+     * Generate crossing points
+     *
+     * @param number
+     * @param size
+     */
+    public void generateCrossingPoints(int number, int size){
+        Random random = new Random();
+        int newCrossPoint;
+        for(int i = 0; i < crossingPoints; i++){
+            do{
+                newCrossPoint = random.nextInt(size - 1);
+            }while(crossingPointsList.indexOf(newCrossPoint + 1) != -1 && crossingPointsList.indexOf(newCrossPoint - 1) != -1);
+            crossingPointsList.add(newCrossPoint);
+        }
+    }
+
+    /**
+     * Generate mutation points
+     *
+     * @param number
+     * @param size
+     */
+    public void generateMutationPoints(int number, int size){
+        Random random = new Random();
+        mutationPoints = new ArrayList<>();
+        int mutationElement;
+        for(int i = 0; i < number; i++){
+            do{
+                mutationElement = random.nextInt(size);
+            }while (mutationPoints.indexOf(mutationElement) != -1);
+            mutationPoints.add(mutationElement);
+        }
     }
 
     /**

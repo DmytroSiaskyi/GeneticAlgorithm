@@ -23,6 +23,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,8 @@ public class MainController {
     private TextField iterNumber;
     @FXML
     private CheckBox staticCrossingPoints;
+    @FXML
+    private CheckBox mutationInversion;
     @FXML
     private Button startButton;
     @FXML
@@ -160,9 +163,48 @@ public class MainController {
      */
     private String updateTask(){
         String result = "success";
-
-
-
+        try {
+            int newMaxWeight = Integer.parseInt(maxWeight.getText());
+            String operator = parentsChoice.getValue();
+            int crossPoints = Integer.parseInt(crossingPoints.getText());
+            boolean staticCrossPoints = staticCrossingPoints.isSelected();
+            int mutationPointsNumber = Integer.parseInt(mutationPoints.getValue());
+            boolean inversions = mutationInversion.isSelected();
+            int iterations = Integer.parseInt(iterNumber.getText());
+            if(newMaxWeight < 1){
+                result = "Обмеження максимальної ваги рюкзака має бути не менше 1.";
+            }else{
+                if(operator == null){
+                    result = "Виберіть оператор вибору батьків для виконання даної операції. ";
+                }else{
+                    if(crossPoints < 1){
+                        result = "Кількість точок кросинговеру повинна бути більше 1.";
+                    }else{
+                        if(mutationPointsNumber < 1){
+                            result = "Кількість точок мутації повинна бути більше 1.";
+                        }
+                    }
+                }
+            }
+            if(!result.equals("success")){
+                return result;
+            }else{
+                if(iterations < 1){
+                    result = "Кількість ітерацій повинна бути більше або рівна 1.";
+                }else{
+                    gas.setBackpackMaxWeight(newMaxWeight);
+                    gas.setCrossingPoints(crossPoints);
+                    gas.generateCrossingPoints(crossPoints, gas.getParents().size());
+                    gas.setStaticCrossingPoints(staticCrossPoints);
+                    gas.setMutationInversion(inversions);
+                    gas.generateMutationPoints(mutationPointsNumber, gas.getParents().size());
+                    gas.setIterations(iterations);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result = "Заповніть всі поля налаштування роботи алгоритму.";
+        }
         return result;
     }
 
@@ -171,7 +213,11 @@ public class MainController {
      *
      */
     private void openTask(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Відкрити умову завдання");
+        File file = fileChooser.showOpenDialog((Stage) startButton.getScene().getWindow());
 
+        System.out.println(file);
     }
 
     /**
