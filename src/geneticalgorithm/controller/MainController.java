@@ -143,6 +143,7 @@ public class MainController {
                 resultStage.setTitle("Результат");
                 resultStage.setScene(new Scene(scene, 700, 500));
                 resultStage.setResizable(false);
+                resultStage.initModality(Modality.APPLICATION_MODAL);
                 Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
                 resultStage.getIcons().add(icon);
                 resultStage.showAndWait();
