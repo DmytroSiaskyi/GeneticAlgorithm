@@ -19,8 +19,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Допомога">
             <items>
-              <MenuItem mnemonicParsing="false" text="Генетичний алгоритм" />
-                  <MenuItem mnemonicParsing="false" text="Про проект" />
+               <MenuItem fx:id="aboutAlgorithmItem" mnemonicParsing="false" text="Генетичний алгоритм" />
+               <MenuItem fx:id="aboutProjectItem" mnemonicParsing="false" text="Про проект" />
             </items>
           </Menu>
         </menus>

@@ -10,8 +10,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.BufferedWriter;
@@ -26,6 +31,7 @@ import java.util.List;
  */
 public class MainController {
 
+    //Table data controlls
     @FXML
     private TableView<Thing> thingsTable;
     @FXML
@@ -36,6 +42,8 @@ public class MainController {
     private TableColumn<Thing, Integer> thingUtility;
     @FXML
     private TableColumn<Thing, Integer> thingWeight;
+
+    //Properties controlls
     @FXML
     private TextField maxWeight;
     @FXML
@@ -52,12 +60,18 @@ public class MainController {
     private ChoiceBox<String> mutationPoints;
     @FXML
     private ChoiceBox<String> parentsChoice;
+
+    //MenuBar controlls
     @FXML
     private MenuItem openItem;
     @FXML
     private MenuItem saveItem;
     @FXML
     private MenuItem exitItem;
+    @FXML
+    private MenuItem aboutAlgorithmItem;
+    @FXML
+    private MenuItem aboutProjectItem;
 
     private GeneticAlgorithmSolver gas;
     private List<TableColumn<Parent, Integer>> columns;
@@ -73,7 +87,47 @@ public class MainController {
         openItem.setOnAction(e -> openTask());
         saveItem.setOnAction(e -> saveTask());
         exitItem.setOnAction(e -> exitProgram());
+        aboutAlgorithmItem.setOnAction(e -> aboutAlgorithm());
+        aboutProjectItem.setOnAction(e -> aboutProject());
         startButton.setOnAction(e-> solve());
+    }
+
+    /**
+     * Display view with authors data
+     */
+    private void aboutProject(){
+        try {
+            AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/aboutAuthorView.fxml"));
+            Stage resultStage = new Stage();
+            resultStage.setTitle("Курсовий проект");
+            resultStage.setScene(new Scene(scene, 700, 500));
+            resultStage.setResizable(false);
+            resultStage.initModality(Modality.APPLICATION_MODAL);
+            Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
+            resultStage.getIcons().add(icon);
+            resultStage.showAndWait();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Displaying view with data about algorithm
+     */
+    private void aboutAlgorithm(){
+        try {
+            AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/aboutAlgorithmView.fxml"));
+            Stage resultStage = new Stage();
+            resultStage.setTitle("Генетичний алгоритм");
+            resultStage.setScene(new Scene(scene, 700, 500));
+            resultStage.setResizable(false);
+            resultStage.initModality(Modality.APPLICATION_MODAL);
+            Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
+            resultStage.getIcons().add(icon);
+            resultStage.showAndWait();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -82,8 +136,19 @@ public class MainController {
     private void solve(){
         String test = updateTask();
         if(test.equals("success")){
-            System.out.println("Start");
             //solving task
+            try {
+                AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/resultView.fxml"));
+                Stage resultStage = new Stage();
+                resultStage.setTitle("Результат");
+                resultStage.setScene(new Scene(scene, 700, 500));
+                resultStage.setResizable(false);
+                Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
+                resultStage.getIcons().add(icon);
+                resultStage.showAndWait();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }else{
             AlertBox.display("Помилка", test);
         }
@@ -94,6 +159,8 @@ public class MainController {
      */
     private String updateTask(){
         String result = "success";
+
+
 
         return result;
     }
