@@ -10,7 +10,7 @@ import java.util.Random;
 /**
  * @author Dmytro Siaskyi dmitry.syaskiy@gmail.com.
  */
-public class Task {
+public class Task implements Cloneable{
     private ObservableList<Thing> things;
     private ObservableList<Parent> parents;
     private List<Integer> crossingPointsList;
@@ -23,6 +23,8 @@ public class Task {
     private int size;
 
     private Integer crossingPoints;
+
+    private Memento undo;
 
     /**
      * Default constructor.
@@ -87,6 +89,34 @@ public class Task {
         this.staticCrossingPoints = staticCrossingPoints;
         this.mutationInversion = mutationInversion;
     }
+
+    private class Memento {
+        private ObservableList<Thing> latestThings;
+        private ObservableList<Parent> latestParents;
+
+        Memento() {
+            latestThings = things;
+            latestParents = parents;
+        }
+
+        ObservableList<Thing> getSavedThings() {
+            return latestThings;
+        }
+
+        ObservableList<Parent> getSavedParents() {
+            return latestParents;
+        }
+    }
+
+    public void preview() {
+        undo = new Memento();
+    }
+
+    public void undoChanges() {
+        things = undo.getSavedThings();
+        parents = undo.getSavedParents();
+    }
+
 
     /**
      * Generate crossing points
@@ -153,7 +183,20 @@ public class Task {
         result.setChromosomeList(chromosome);
         return result;
     }
-
+    public Task clone(){
+        Task task = new Task();
+        task.setSize(size);
+        task.setThings(things);
+        task.setStaticCrossingPoints(staticCrossingPoints);
+        task.setCrossingPointsList(crossingPointsList);
+        task.setIterations(iterations);
+        task.setBackpackMaxWeight(backpackMaxWeight);
+        task.setMutationInversion(mutationInversion);
+        task.setCrossingPoints(crossingPoints);
+        task.setParents(parents);
+        task.setParentsChoiceMethod(parentsChoiceMethod);
+        return task;
+    }
     public int getSize() {
         return size;
     }
