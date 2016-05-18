@@ -10,8 +10,7 @@ import java.util.Random;
 /**
  * @author Dmytro Siaskyi dmitry.syaskiy@gmail.com.
  */
-public class GeneticAlgorithmSolver {
-
+public class Task {
     private ObservableList<Thing> things;
     private ObservableList<Parent> parents;
     private List<Integer> crossingPointsList;
@@ -21,47 +20,47 @@ public class GeneticAlgorithmSolver {
     private String parentsChoiceMethod;
     private Boolean staticCrossingPoints;
     private Boolean mutationInversion;
+    private int size;
 
     private Integer crossingPoints;
 
     /**
      * Default constructor.
      */
-    public GeneticAlgorithmSolver(){
-        Random random = new Random();
-        int size = 10;
-        int mutationPointsNumber;
-        iterations = random.nextInt(5) + 3;
-        backpackMaxWeight = (random.nextInt(5) + 3) * 100;
-        parentsChoiceMethod = "Панміксія";
-
-        crossingPointsList = new ArrayList<>();
-        crossingPoints = mutationPointsNumber= size / 5;
-        staticCrossingPoints = true;
-        generateCrossingPoints(crossingPoints, size);
-
-        mutationInversion = false;
-        generateMutationPoints(mutationPointsNumber, size);
-
-        things = FXCollections.observableArrayList();
-        int weight, utility;
-        for(int i = 0; i < size; i++){
-            weight = (random.nextInt(backpackMaxWeight/30) + 5) * 10;
-            utility = random.nextInt(backpackMaxWeight) + 10;
-            Thing thing = new Thing("C" + i, weight, utility);
-            things.add(thing);
-        }
-
-        parents = FXCollections.observableArrayList();
-        Parent parent;
-        for(int i = 0; i < size; i++){
-            do {
-                parent = generateParent(size, random);
-            }while(parents.indexOf(parent) != -1);
-            parents.add(parent);
-        }
+    public Task(){
+//        Random random = new Random();
+//        int size = 10;
+//        int mutationPointsNumber;
+//        iterations = random.nextInt(5) + 3;
+//        backpackMaxWeight = (random.nextInt(5) + 3) * 100;
+//        parentsChoiceMethod = "Панміксія";
+//
+//        crossingPointsList = new ArrayList<>();
+//        crossingPoints = mutationPointsNumber= size / 5;
+//        staticCrossingPoints = true;
+//        generateCrossingPoints(crossingPoints, size);
+//
+//        mutationInversion = false;
+//        generateMutationPoints(mutationPointsNumber, size);
+//
+//        things = FXCollections.observableArrayList();
+//        int weight, utility;
+//        for(int i = 0; i < size; i++){
+//            weight = (random.nextInt(backpackMaxWeight/30) + 5) * 10;
+//            utility = random.nextInt(backpackMaxWeight) + 10;
+//            Thing thing = new Thing("C" + i, weight, utility);
+//            things.add(thing);
+//        }
+//
+//        parents = FXCollections.observableArrayList();
+//        Parent parent;
+//        for(int i = 0; i < size; i++){
+//            do {
+//                parent = generateParent(size, random);
+//            }while(parents.indexOf(parent) != -1);
+//            parents.add(parent);
+//        }
     }
-
     /**
      * Constructor with parameters
      *
@@ -75,7 +74,7 @@ public class GeneticAlgorithmSolver {
      * @param staticCrossingPoints
      * @param mutationInversion
      */
-    public GeneticAlgorithmSolver(ObservableList<Thing> things, ObservableList<Parent> parents, Integer backpackMaxWeight,
+    public Task(ObservableList<Thing> things, ObservableList<Parent> parents, Integer backpackMaxWeight,
                                   List<Integer> crossingPoints, List<Integer> mutationPoints, Integer iterations, String parentsChoiceMethod,
                                   Boolean staticCrossingPoints, Boolean mutationInversion){
         this.things = things;
@@ -155,12 +154,28 @@ public class GeneticAlgorithmSolver {
         return result;
     }
 
-    public Boolean getMutationInversion() {
-        return mutationInversion;
+    public int getSize() {
+        return size;
     }
 
-    public void setMutationInversion(Boolean mutationInversion) {
-        this.mutationInversion = mutationInversion;
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public ObservableList<Thing> getThings() {
+        return things;
+    }
+
+    public void setThings(ObservableList<Thing> things) {
+        this.things = things;
+    }
+
+    public ObservableList<Parent> getParents() {
+        return parents;
+    }
+
+    public void setParents(ObservableList<Parent> parents) {
+        this.parents = parents;
     }
 
     public List<Integer> getCrossingPointsList() {
@@ -179,20 +194,12 @@ public class GeneticAlgorithmSolver {
         this.mutationPoints = mutationPoints;
     }
 
-    public Boolean getStaticCrossingPoints() {
-        return staticCrossingPoints;
+    public Integer getBackpackMaxWeight() {
+        return backpackMaxWeight;
     }
 
-    public void setStaticCrossingPoints(Boolean staticCrossingPoints) {
-        this.staticCrossingPoints = staticCrossingPoints;
-    }
-
-    public String getParentsChoiceMethod() {
-        return parentsChoiceMethod;
-    }
-
-    public void setParentsChoiceMethod(String parentsChoiceMethod) {
-        this.parentsChoiceMethod = parentsChoiceMethod;
+    public void setBackpackMaxWeight(Integer backpackMaxWeight) {
+        this.backpackMaxWeight = backpackMaxWeight;
     }
 
     public Integer getIterations() {
@@ -203,6 +210,30 @@ public class GeneticAlgorithmSolver {
         this.iterations = iterations;
     }
 
+    public String getParentsChoiceMethod() {
+        return parentsChoiceMethod;
+    }
+
+    public void setParentsChoiceMethod(String parentsChoiceMethod) {
+        this.parentsChoiceMethod = parentsChoiceMethod;
+    }
+
+    public Boolean getStaticCrossingPoints() {
+        return staticCrossingPoints;
+    }
+
+    public void setStaticCrossingPoints(Boolean staticCrossingPoints) {
+        this.staticCrossingPoints = staticCrossingPoints;
+    }
+
+    public Boolean getMutationInversion() {
+        return mutationInversion;
+    }
+
+    public void setMutationInversion(Boolean mutationInversion) {
+        this.mutationInversion = mutationInversion;
+    }
+
     public Integer getCrossingPoints() {
         return crossingPoints;
     }
@@ -210,29 +241,4 @@ public class GeneticAlgorithmSolver {
     public void setCrossingPoints(Integer crossingPoints) {
         this.crossingPoints = crossingPoints;
     }
-
-    public Integer getBackpackMaxWeight() {
-        return backpackMaxWeight;
-    }
-
-    public void setBackpackMaxWeight(Integer backpackMaxWeight) {
-        this.backpackMaxWeight = backpackMaxWeight;
-    }
-
-    public ObservableList<Parent> getParents() {
-        return parents;
-    }
-
-    public void setParents(ObservableList<Parent> parents) {
-        this.parents = parents;
-    }
-
-    public ObservableList<Thing> getThings() {
-        return things;
-    }
-
-    public void setThings(ObservableList<Thing> things) {
-        this.things = things;
-    }
-
 }

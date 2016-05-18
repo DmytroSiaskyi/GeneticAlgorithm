@@ -8,8 +8,6 @@ import javafx.fxml.FXML;
  */
 public class ResultController {
 
-
-
     /**
      * Initialize controller and stage
      */

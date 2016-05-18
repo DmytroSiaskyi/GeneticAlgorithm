@@ -2,9 +2,7 @@ package geneticalgorithm.controller;
 
 import geneticalgorithm.AlertBox;
 import geneticalgorithm.ConfirmBox;
-import geneticalgorithm.model.GeneticAlgorithmSolver;
-import geneticalgorithm.model.Parent;
-import geneticalgorithm.model.Thing;
+import geneticalgorithm.model.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -19,11 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.ParseException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,14 +70,19 @@ public class MainController {
     @FXML
     private MenuItem aboutProjectItem;
 
-    private GeneticAlgorithmSolver gas;
     private List<TableColumn<Parent, Integer>> columns;
+
+    private GASolver gaSolver;
+    private TaskArchitector taskArchitector;
+
 
     /**
      * Initialize controller and stage
      */
     @FXML
     public void initialize(){
+        taskArchitector = new TaskArchitector();
+        taskArchitector.setTaskBuilder(new GenTaskBuilder());
         mutationPoints.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
         parentsChoice.setItems(FXCollections.observableArrayList("Панміксія", "Імбридинг", "Аутбридинг", "Селекція", "Метод рулетки"));
         generateDataButton.setOnAction(e -> generateTaskData());
@@ -192,13 +191,15 @@ public class MainController {
                 if(iterations < 1){
                     result = "Кількість ітерацій повинна бути більше або рівна 1.";
                 }else{
-                    gas.setBackpackMaxWeight(newMaxWeight);
-                    gas.setCrossingPoints(crossPoints);
-                    gas.generateCrossingPoints(crossPoints, gas.getParents().size());
-                    gas.setStaticCrossingPoints(staticCrossPoints);
-                    gas.setMutationInversion(inversions);
-                    gas.generateMutationPoints(mutationPointsNumber, gas.getParents().size());
-                    gas.setIterations(iterations);
+                    Task task = gaSolver.getTask();
+                    task.setBackpackMaxWeight(newMaxWeight);
+                    task.setCrossingPoints(crossPoints);
+                    task.generateCrossingPoints(crossPoints, task.getParents().size());
+                    task.setStaticCrossingPoints(staticCrossPoints);
+                    task.setMutationInversion(inversions);
+                    task.generateMutationPoints(mutationPointsNumber, task.getParents().size());
+                    task.setIterations(iterations);
+                    gaSolver.setTask(task);
                 }
             }
         }catch (Exception e){
@@ -216,7 +217,21 @@ public class MainController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Відкрити умову завдання");
         File file = fileChooser.showOpenDialog((Stage) startButton.getScene().getWindow());
+        String[] splitedString;
+        try {
+            FileReader fr = new FileReader(file.getAbsolutePath());
+            BufferedReader br = new BufferedReader(fr);
 
+            int maxBackPackWeight;
+
+            String buffer;
+            buffer = br.readLine();
+            splitedString = buffer.split(": ");
+            maxBackPackWeight = Integer.parseInt(splitedString[1]);
+            br.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
         System.out.println(file);
     }
 
@@ -224,7 +239,8 @@ public class MainController {
      * Save task data to .txt file
      */
     private void saveTask(){
-        if(gas != null) {
+        Task task = gaSolver.getTask();
+        if(task != null) {
             String test = updateTask();
             if(!test.equals("success")){
                 AlertBox.display("Помилка", test);
@@ -241,39 +257,39 @@ public class MainController {
                     FileWriter fw = new FileWriter(newFile.getAbsoluteFile());
                     BufferedWriter bw = new BufferedWriter(fw);
 
-                    buffer = "Максимальна вага рюкзака: " + gas.getBackpackMaxWeight();
+                    buffer = "Максимальна вага рюкзака: " + task.getBackpackMaxWeight();
                     bw.write(buffer);
                     bw.newLine();
 
-                    buffer = "Оператор вибору батьків: " + gas.getParentsChoiceMethod();
+                    buffer = "Оператор вибору батьків: " + task.getParentsChoiceMethod();
                     bw.write(buffer);
                     bw.newLine();
 
                     buffer = "Точки кросинговеру: ";
-                    List<Integer> crossingPoints = gas.getCrossingPointsList();
+                    List<Integer> crossingPoints = task.getCrossingPointsList();
                     for(int i = 0; i < crossingPoints.size(); i++){
                         buffer += crossingPoints.get(i) + " ";
                     }
                     bw.write(buffer);
                     bw.newLine();
 
-                    buffer = "Постійність точок кросинговеру: " + gas.getStaticCrossingPoints();
+                    buffer = "Постійність точок кросинговеру: " + task.getStaticCrossingPoints();
                     bw.write(buffer);
                     bw.newLine();
 
                     buffer = "Точки мутації: ";
-                    List<Integer> mutationPoints = gas.getMutationPoints();
+                    List<Integer> mutationPoints = task.getMutationPoints();
                     for(int i = 0; i < mutationPoints.size(); i++){
                         buffer += mutationPoints.get(i) + " ";
                     }
                     bw.write(buffer);
                     bw.newLine();
 
-                    buffer = "Інверсія при мутації: " + gas.getMutationInversion();
+                    buffer = "Інверсія при мутації: " + task.getMutationInversion();
                     bw.write(buffer);
                     bw.newLine();
 
-                    buffer = "Кількість ітерацій: " + gas.getIterations();
+                    buffer = "Кількість ітерацій: " + task.getIterations();
                     bw.write(buffer);
                     bw.newLine();
 
@@ -281,7 +297,7 @@ public class MainController {
                     bw.write(buffer);
                     bw.newLine();
 
-                    List<Thing> things = gas.getThings();
+                    List<Thing> things = task.getThings();
                     for(int i = 0; i < things.size(); i++){
                         buffer = things.get(i).getName() + " " + things.get(i).getUtility() + " " + things.get(i).getWeight();
                         bw.write(buffer);
@@ -290,7 +306,7 @@ public class MainController {
                     bw.write(buffer);
                     bw.newLine();
 
-                    List<Parent> parents = gas.getParents();
+                    List<Parent> parents = task.getParents();
                     buffer = "Набір предків(хромосома, вага, корисність): ";
                     bw.write(buffer);
                     bw.newLine();
@@ -331,14 +347,17 @@ public class MainController {
      * Generate task with task details
      */
     private void generateTaskData(){
-        gas = new GeneticAlgorithmSolver();
+        taskArchitector.constructTask(10);
+        Task task = taskArchitector.getTask();
+        gaSolver = GASolver.getInstance();
+        gaSolver.setTask(task);
         parentsChoice.setValue(parentsChoice.getItems().get(0));
-        initializeThingsTable(gas.getThings());
-        initializeParentsTable(gas.getParents());
-        maxWeight.setText(gas.getBackpackMaxWeight().toString());
-        crossingPoints.setText(gas.getCrossingPoints() + "");
-        mutationPoints.setValue(mutationPoints.getItems().get(gas.getMutationPoints().size()-1));
-        iterNumber.setText(gas.getIterations() + "");
+        initializeThingsTable(task.getThings());
+        initializeParentsTable(task.getParents());
+        maxWeight.setText(task.getBackpackMaxWeight().toString());
+        crossingPoints.setText(task.getCrossingPointsList().size() + "");
+        mutationPoints.setValue(mutationPoints.getItems().get(task.getMutationPoints().size()-1));
+        iterNumber.setText(task.getIterations() + "");
         staticCrossingPoints.setSelected(true);
     }
     /**
@@ -359,13 +378,14 @@ public class MainController {
      * @param parents
      */
     private void initializeParentsTable(ObservableList<Parent> parents){
-        parentsTable.setItems(gas.getParents());
+        parentsTable.setItems(parents);
+        Task task = GASolver.getInstance().getTask();
         if(columns == null) {
-            int size = gas.getThings().size();
+            int size = task.getThings().size();
             TableColumn column;
             columns = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                column = new TableColumn<Parent, Integer>(gas.getThings().get(i).getName());
+                column = new TableColumn<Parent, Integer>(task.getThings().get(i).getName());
                 columns.add(column);
                 parentsTable.getColumns().add(column);
             }
