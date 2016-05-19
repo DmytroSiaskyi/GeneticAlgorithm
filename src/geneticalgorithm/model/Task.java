@@ -117,7 +117,6 @@ public class Task implements Cloneable{
         parents = undo.getSavedParents();
     }
 
-
     /**
      * Generate crossing points
      *
