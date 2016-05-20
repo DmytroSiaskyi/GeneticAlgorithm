@@ -50,6 +50,8 @@ public class MainController {
     @FXML
     private CheckBox staticCrossingPoints;
     @FXML
+    private CheckBox iterationDisplaying;
+    @FXML
     private CheckBox mutationInversion;
     @FXML
     private Button startButton;
@@ -100,7 +102,7 @@ public class MainController {
             AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/aboutAuthorView.fxml"));
             Stage resultStage = new Stage();
             resultStage.setTitle("Курсовий проект");
-            resultStage.setScene(new Scene(scene, 600, 400));
+            resultStage.setScene(new Scene(scene, 600, 380));
             resultStage.setResizable(false);
             resultStage.initModality(Modality.APPLICATION_MODAL);
             Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
@@ -119,7 +121,7 @@ public class MainController {
             AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/aboutAlgorithmView.fxml"));
             Stage resultStage = new Stage();
             resultStage.setTitle("Генетичний алгоритм");
-            resultStage.setScene(new Scene(scene, 600, 400));
+            resultStage.setScene(new Scene(scene, 600, 380));
             resultStage.setResizable(false);
             resultStage.initModality(Modality.APPLICATION_MODAL);
             Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
@@ -137,6 +139,7 @@ public class MainController {
         String test = updateTask();
         if(test.equals("success")){
             //solving task
+            String result = GASolver.getInstance().solve(iterationDisplaying.isSelected());
             try {
                 AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/resultView.fxml"));
                 Stage resultStage = new Stage();
@@ -146,6 +149,10 @@ public class MainController {
                 resultStage.initModality(Modality.APPLICATION_MODAL);
                 Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
                 resultStage.getIcons().add(icon);
+
+                TextArea taskSolution = (TextArea) resultStage.getScene().lookup("#solutionTextArea");
+                taskSolution.setText(result);
+
                 resultStage.showAndWait();
             }catch (IOException e){
                 e.printStackTrace();
@@ -174,8 +181,8 @@ public class MainController {
                 if(operator == null){
                     result = "Виберіть оператор вибору батьків для виконання даної операції. ";
                 }else{
-                    if(crossPoints < 1){
-                        result = "Кількість точок кросинговеру повинна бути більше 1.";
+                    if(crossPoints < 2){
+                        result = "Кількість точок кросинговеру повинна бути більше 2.";
                     }else{
                         if(mutationPointsNumber < 1){
                             result = "Кількість точок мутації повинна бути більше 1.";
@@ -193,13 +200,13 @@ public class MainController {
                     Task task = gaSolver.getTask();
                     task.setBackpackMaxWeight(newMaxWeight);
                     if(task.getCrossingPointsList().size() !=  crossPoints){
-                        task.generateCrossingPoints(crossPoints, task.getSize());
+                        task.generateCrossingPoints(crossPoints, task.getThings().size());
                     }
                     task.setCrossingPoints(crossPoints);
                     task.setStaticCrossingPoints(staticCrossPoints);
                     task.setMutationInversion(inversions);
                     if(task.getMutationPoints().size() != mutationPointsNumber){
-                        task.generateMutationPoints(mutationPointsNumber, task.getSize());
+                        task.generateMutationPoints(mutationPointsNumber, task.getParents().size());
                     }
                     task.setIterations(iterations);
                     gaSolver.setTask(task);
@@ -207,6 +214,7 @@ public class MainController {
             }
         }catch (Exception e){
             result = "Заповніть всі поля налаштування роботи алгоритму.";
+            e.printStackTrace();
         }
         return result;
     }
@@ -488,29 +496,28 @@ public class MainController {
      * @param parents
      */
     private void initializeParentsTable(ObservableList<Parent> parents){
+        parentsTable.getColumns().clear();
         parentsTable.setItems(parents);
         Task task = GASolver.getInstance().getTask();
-        if(columns == null) {
-            int size = task.getThings().size();
-            TableColumn column;
-            columns = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                column = new TableColumn<Parent, Integer>(task.getThings().get(i).getName());
-                columns.add(column);
-                parentsTable.getColumns().add(column);
-            }
-            column = new TableColumn<Parent, Integer>("Вага");
+        int size = task.getThings().size();
+        TableColumn column;
+        columns = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            column = new TableColumn<Parent, Integer>(task.getThings().get(i).getName());
             columns.add(column);
             parentsTable.getColumns().add(column);
-            column = new TableColumn<Parent, Integer>("Корисність");
-            columns.add(column);
-            parentsTable.getColumns().add(column);
-            for(int i = 0; i < size; i++){
-                final int row = i;
-                columns.get(i).setCellValueFactory(cellData -> new SimpleObjectProperty<Integer>(cellData.getValue().getChromosome().get(row)));
-            }
-            columns.get(size).setCellValueFactory(cellData -> cellData.getValue().weightProperty().asObject());
-            columns.get(size+1).setCellValueFactory(cellData -> cellData.getValue().utilityProperty().asObject());
         }
+        column = new TableColumn<Parent, Integer>("Вага");
+        columns.add(column);
+        parentsTable.getColumns().add(column);
+        column = new TableColumn<Parent, Integer>("Корисність");
+        columns.add(column);
+        parentsTable.getColumns().add(column);
+        for(int i = 0; i < size; i++){
+            final int row = i;
+            columns.get(i).setCellValueFactory(cellData -> new SimpleObjectProperty<Integer>(cellData.getValue().getChromosome().get(row)));
+        }
+        columns.get(size).setCellValueFactory(cellData -> cellData.getValue().weightProperty().asObject());
+        columns.get(size+1).setCellValueFactory(cellData -> cellData.getValue().utilityProperty().asObject());
     }
 }

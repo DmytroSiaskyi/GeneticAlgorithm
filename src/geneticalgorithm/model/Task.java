@@ -42,6 +42,12 @@ public class Task implements Cloneable{
 
         crossingPointsList = new ArrayList<>();
         crossingPoints = mutationPointsNumber= size / 5;
+        if(crossingPoints < 2){
+            crossingPoints = 2;
+        }
+        if(mutationPointsNumber < 1){
+            mutationPointsNumber = 1;
+        }
         staticCrossingPoints = true;
         generateCrossingPoints(crossingPoints, size);
 
@@ -105,7 +111,7 @@ public class Task implements Cloneable{
         crossingPointsList = new ArrayList<>();
         for(int i = 0; i < pointsNumber; i++){
             do{
-                newCrossPoint = random.nextInt(numberOfThings - 1);
+                newCrossPoint = random.nextInt(numberOfThings - 1) + 1;
             }while(crossingPointsList.indexOf(newCrossPoint + 1) != -1 && crossingPointsList.indexOf(newCrossPoint - 1) != -1);
             crossingPointsList.add(newCrossPoint);
         }
@@ -123,7 +129,7 @@ public class Task implements Cloneable{
         int mutationElement;
         for(int i = 0; i < pointsNumber; i++){
             do{
-                mutationElement = random.nextInt(parentsNumber);
+                mutationElement = random.nextInt(parentsNumber - 1) + 1;
             }while (mutationPoints.indexOf(mutationElement) != -1);
             mutationPoints.add(mutationElement);
         }
