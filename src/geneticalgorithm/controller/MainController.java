@@ -167,6 +167,7 @@ public class MainController {
      */
     private String updateTask(){
         String result = "success";
+        Task task = gaSolver.getTask();
         try {
             int newMaxWeight = Integer.parseInt(maxWeight.getText());
             String operator = parentsChoice.getValue();
@@ -184,6 +185,9 @@ public class MainController {
                     if(crossPoints < 2){
                         result = "Кількість точок кросинговеру повинна бути більше 2.";
                     }else{
+                        if(crossPoints > task.getParents().size()/3){
+                            result = "Кількість точок кросинговеру занадто велика.";
+                        }
                         if(mutationPointsNumber < 1){
                             result = "Кількість точок мутації повинна бути більше 1.";
                         }
@@ -196,8 +200,6 @@ public class MainController {
                 if(iterations < 1){
                     result = "Кількість ітерацій повинна бути більше або рівна 1.";
                 }else{
-                    /* Додати перевірку на зміну кількості точок кросинговеру */
-                    Task task = gaSolver.getTask();
                     task.setBackpackMaxWeight(newMaxWeight);
                     if(task.getCrossingPointsList().size() !=  crossPoints){
                         task.generateCrossingPoints(crossPoints, task.getThings().size());

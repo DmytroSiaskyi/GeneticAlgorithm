@@ -109,10 +109,21 @@ public class Task implements Cloneable{
         Random random = new Random();
         int newCrossPoint;
         crossingPointsList = new ArrayList<>();
+        boolean flag;
         for(int i = 0; i < pointsNumber; i++){
             do{
+                flag = true;
                 newCrossPoint = random.nextInt(numberOfThings - 1) + 1;
-            }while(crossingPointsList.indexOf(newCrossPoint + 1) != -1 && crossingPointsList.indexOf(newCrossPoint - 1) != -1);
+                if(crossingPointsList.indexOf(newCrossPoint + 1) != -1){
+                    flag = false;
+                }
+                if(crossingPointsList.indexOf(newCrossPoint - 1) != -1){
+                    flag = false;
+                }
+                if(crossingPointsList.indexOf(newCrossPoint) != -1){
+                    flag = false;
+                }
+            }while(!flag);
             crossingPointsList.add(newCrossPoint);
         }
     }
