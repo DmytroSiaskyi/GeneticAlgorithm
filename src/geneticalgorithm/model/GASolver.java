@@ -49,19 +49,80 @@ public class GASolver {
 
     public String solve(boolean showIterations){
         String result = "-----------------------------------\n";
-        result += "        Початкова умова\n";
+        result += "        Початкова умова            \n";
         result += "-----------------------------------\n";
         result += printTask();
 
+        for(int i = 0; i < task.getIterations(); i++){
+            result += "-----------------------------------\n";
+            result += "             Ітерація " + (i + 1) + "\n";
+            result += "-----------------------------------\n";
 
+            List<Parent> chosenParents = parentsChoice.getParents(task);
+            result += "Обрані для схрещування батьки: \n";
+            if(chosenParents != null) {
+                result += chosenParents.get(0).toString() + "\n";
+                result += chosenParents.get(1).toString() + "\n";
+            }else{
+                result = "Помилка виконання.";
+                return result;
+            }
+            if(!task.getStaticCrossingPoints()){
+                task.generateCrossingPoints(task.getCrossingPointsList().size(), task.getThings().size());
+            }
+            result += "Точки кросинговеру: ";
+            List<Integer> crossingPoints = task.getCrossingPointsList();
+            for(int j = 0; j < crossingPoints.size(); i++){
+                result += crossingPoints.get(j) + " ";
+            }
+            result += "\n";
+            crossingover(crossingPoints, chosenParents.get(0), chosenParents.get(1));
+            result += "Результат кросинговеру: " + "\n";
+            result += chosenParents.get(0).toString() + "\n";
+            result += chosenParents.get(1).toString() + "\n";
+            result += "Точки мутації: ";
+            List<Integer> mutationPoints = task.getMutationPoints();
+            for(int j = 0; j < mutationPoints.size(); j++){
+                result += mutationPoints.get(j) + " ";
+            }
+            result += "\n";
+            mutation(mutationPoints, chosenParents.get(0), chosenParents.get(1));
+            result += "Результат мутації: " + "\n";
+            result += chosenParents.get(0).toString() + "\n";
+            result += chosenParents.get(1).toString() + "\n";
+            result += "Етап селекції: " + "\n";
+            selection(chosenParents.get(0), chosenParents.get(1));
+            result += chosenParents.get(0).toString() + "\n";
+            result += chosenParents.get(1).toString() + "\n";
+
+            //check maxWitght limit and add new parents to list
+            //print new parents list
+        }
+
+        result += "-----------------------------------\n";
+        result += "             Результат             \n";
+        result += "-----------------------------------\n";
+        result += printResult();
 
         return result;
+    }
+
+    private void crossingover(List<Integer> crossingPoints, Parent first, Parent second){
+        //Here will be method
+    }
+
+    private void mutation(List<Integer> mutationPoints, Parent first, Parent second){
+        //Here will be method
+    }
+
+    private void selection(Parent first, Parent second){
+        //Here will be method
     }
 
     /**
      * Return string with task data
      */
-    public String printTask(){
+    private String printTask(){
         String printedTask = new String();
 
         printedTask += "Максимальна вага рюкзака: " + task.getBackpackMaxWeight() + "\n";
@@ -99,6 +160,15 @@ public class GASolver {
         }
 
         return printedTask;
+    }
+
+    /**
+     * Return result of task solving in String
+     */
+    private String printResult(){
+        String result = new String();
+        //Here will be method
+        return result;
     }
 
     public void setParentsChoice(ParentsChoice parentsChoice) {

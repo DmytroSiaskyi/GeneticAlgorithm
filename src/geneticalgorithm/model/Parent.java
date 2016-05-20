@@ -36,7 +36,16 @@ public class Parent {
         this.weight = new SimpleIntegerProperty(weight);
         this.utility = new SimpleIntegerProperty(utility);
     }
-
+    @Override
+    public String toString(){
+        String parent = "";
+        for(int i = 0; i < chromosome.size(); i++){
+            parent += chromosome.get(i) + " ";
+        }
+        parent += utility + " ";
+        parent += weight;
+        return parent;
+    }
     @Override
     public boolean equals(Object o){
         if(o == null)

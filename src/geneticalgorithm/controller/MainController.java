@@ -140,6 +140,9 @@ public class MainController {
         if(test.equals("success")){
             //solving task
             String result = GASolver.getInstance().solve(iterationDisplaying.isSelected());
+            if(result.equals("Помилка виконання.")){
+                AlertBox.display("Помилка", result);
+            }
             try {
                 AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/resultView.fxml"));
                 Stage resultStage = new Stage();
