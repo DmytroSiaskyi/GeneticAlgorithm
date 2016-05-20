@@ -102,6 +102,7 @@ public class Task implements Cloneable{
     public void generateCrossingPoints(int pointsNumber, int numberOfThings){
         Random random = new Random();
         int newCrossPoint;
+        crossingPointsList = new ArrayList<>();
         for(int i = 0; i < pointsNumber; i++){
             do{
                 newCrossPoint = random.nextInt(numberOfThings - 1);

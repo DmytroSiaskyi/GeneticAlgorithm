@@ -44,6 +44,8 @@ public class MainController {
     @FXML
     private TextField crossingPoints;
     @FXML
+    private TextField taskSize;
+    @FXML
     private TextField iterNumber;
     @FXML
     private CheckBox staticCrossingPoints;
@@ -190,9 +192,15 @@ public class MainController {
                     /* Додати перевірку на зміну кількості точок кросинговеру */
                     Task task = gaSolver.getTask();
                     task.setBackpackMaxWeight(newMaxWeight);
+                    if(task.getCrossingPointsList().size() !=  crossPoints){
+                        task.generateCrossingPoints(crossPoints, task.getSize());
+                    }
                     task.setCrossingPoints(crossPoints);
                     task.setStaticCrossingPoints(staticCrossPoints);
                     task.setMutationInversion(inversions);
+                    if(task.getMutationPoints().size() != mutationPointsNumber){
+                        task.generateMutationPoints(mutationPointsNumber, task.getSize());
+                    }
                     task.setIterations(iterations);
                     gaSolver.setTask(task);
                 }
@@ -225,11 +233,11 @@ public class MainController {
                 maxBackPackWeight = Integer.parseInt(splitedString[1]);
                 task.setBackpackMaxWeight(maxBackPackWeight);
 
-                String parentsChoice;
+                String newParentsChoice;
                 buffer = br.readLine();
                 splitedString = buffer.split(": ");
-                parentsChoice = splitedString[1];
-                task.setParentsChoiceMethod(parentsChoice);
+                newParentsChoice = splitedString[1];
+                task.setParentsChoiceMethod(newParentsChoice);
 
                 List<Integer> crossPoints = new ArrayList<>();
                 buffer = br.readLine();
@@ -248,14 +256,14 @@ public class MainController {
                     crossPointsStatic = true;
                 task.setStaticCrossingPoints(crossPointsStatic);
 
-                List<Integer> mutationPoints = new ArrayList<>();
+                List<Integer> mutationPointsList = new ArrayList<>();
                 buffer = br.readLine();
                 splitedString = buffer.split(": ");
                 splitedString = splitedString[1].split("\\s+");
                 for(int i = 0; i < splitedString.length; i++){
-                    mutationPoints.add(Integer.parseInt(splitedString[i]));
+                    mutationPointsList.add(Integer.parseInt(splitedString[i]));
                 }
-                task.setMutationPoints(mutationPoints);
+                task.setMutationPoints(mutationPointsList);
 
                 boolean mutationPointsInv = false;
                 buffer = br.readLine();
@@ -275,12 +283,13 @@ public class MainController {
                 ObservableList<Thing> things = FXCollections.observableArrayList();
                 Thing thing;
                 buffer = br.readLine();
-                while(buffer != null && buffer != "Набір предків(хромосома, вага, корисність):"){
+                while(buffer != null && !buffer.equals("Набір предків(хромосома, вага, корисність): ")){
                     splitedString = buffer.split("\\s+");
                     thing = new Thing();
                     thing.setName(splitedString[0]);
                     thing.setUtility(Integer.parseInt(splitedString[1]));
                     thing.setWeight(Integer.parseInt(splitedString[2]));
+                    things.add(thing);
                     buffer = br.readLine();
                 }
                 task.setThings(things);
@@ -304,6 +313,7 @@ public class MainController {
                     int utility = Integer.parseInt(splitedString[i]);
                     parent.setWeight(weight);
                     parent.setUtility(utility);
+                    parents.add(parent);
                 }
                 task.setParents(parents);
                 task.setSize(parents.size());
@@ -314,7 +324,19 @@ public class MainController {
 
                 initializeThingsTable(task.getThings());
                 initializeParentsTable(task.getParents());
+                maxWeight.setText(maxBackPackWeight + "");
+                parentsChoice.setValue(newParentsChoice);
+                crossingPoints.setText(crossPoints.size() + "");
+                if(crossPointsStatic){
+                    staticCrossingPoints.setSelected(true);
+                }
+                mutationPoints.setValue(mutationPointsList.size() + "");
+                if(mutationPointsInv){
+                    mutationInversion.setSelected(true);
+                }
+                iterNumber.setText(iterations + "");
             } catch (Exception e) {
+                e.printStackTrace();
                 AlertBox.display("Помилка", "Файл з початковою умовою - пошкоджений.");
             }
         }
@@ -431,7 +453,11 @@ public class MainController {
      */
     private void generateTaskData(){
         gaSolver = GASolver.getInstance();
-        Task task = new Task(10);
+        int size = 10;
+        if(!taskSize.getText().isEmpty()) {
+            size = Integer.parseInt(taskSize.getText());
+        }
+        Task task = new Task(size);
         gaSolver.setTask(task);
         parentsChoice.setValue(parentsChoice.getItems().get(0));
         initializeThingsTable(task.getThings());
