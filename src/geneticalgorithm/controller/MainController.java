@@ -190,10 +190,8 @@ public class MainController {
                     Task task = gaSolver.getTask();
                     task.setBackpackMaxWeight(newMaxWeight);
                     task.setCrossingPoints(crossPoints);
-                    task.generateCrossingPoints(crossPoints, task.getParents().size());
                     task.setStaticCrossingPoints(staticCrossPoints);
                     task.setMutationInversion(inversions);
-                    task.generateMutationPoints(mutationPointsNumber, task.getParents().size());
                     task.setIterations(iterations);
                     gaSolver.setTask(task);
                 }
@@ -227,13 +225,97 @@ public class MainController {
                 maxBackPackWeight = Integer.parseInt(splitedString[1]);
                 task.setBackpackMaxWeight(maxBackPackWeight);
 
+                String parentsChoice;
+                buffer = br.readLine();
+                splitedString = buffer.split(": ");
+                parentsChoice = splitedString[1];
+                task.setParentsChoiceMethod(parentsChoice);
 
+                List<Integer> crossPoints = new ArrayList<>();
+                buffer = br.readLine();
+                splitedString = buffer.split(": ");
+                splitedString = splitedString[1].split("\\s+");
+                for(int i = 0; i < splitedString.length; i++){
+                    crossPoints.add(Integer.parseInt(splitedString[i]));
+                }
+                task.setCrossingPointsList(crossPoints);
+                task.setCrossingPoints(crossPoints.size());
+
+                boolean crossPointsStatic = false;
+                buffer = br.readLine();
+                splitedString = buffer.split(": ");
+                if(splitedString[1].equals("true"))
+                    crossPointsStatic = true;
+                task.setStaticCrossingPoints(crossPointsStatic);
+
+                List<Integer> mutationPoints = new ArrayList<>();
+                buffer = br.readLine();
+                splitedString = buffer.split(": ");
+                splitedString = splitedString[1].split("\\s+");
+                for(int i = 0; i < splitedString.length; i++){
+                    mutationPoints.add(Integer.parseInt(splitedString[i]));
+                }
+                task.setMutationPoints(mutationPoints);
+
+                boolean mutationPointsInv = false;
+                buffer = br.readLine();
+                splitedString = buffer.split(": ");
+                if(splitedString[1].equals("true"))
+                    mutationPointsInv = true;
+                task.setMutationInversion(mutationPointsInv);
+
+                int iterations;
+                buffer = br.readLine();
+                splitedString = buffer.split(": ");
+                iterations = Integer.parseInt(splitedString[1]);
+                task.setIterations(iterations);
+
+                br.readLine();
+
+                ObservableList<Thing> things = FXCollections.observableArrayList();
+                Thing thing;
+                buffer = br.readLine();
+                while(buffer != null && buffer != "Набір предків(хромосома, вага, корисність):"){
+                    splitedString = buffer.split("\\s+");
+                    thing = new Thing();
+                    thing.setName(splitedString[0]);
+                    thing.setUtility(Integer.parseInt(splitedString[1]));
+                    thing.setWeight(Integer.parseInt(splitedString[2]));
+                    buffer = br.readLine();
+                }
+                task.setThings(things);
+
+                br.readLine();
+
+                ObservableList<Parent> parents = FXCollections.observableArrayList();
+                Parent parent;
+                while((buffer = br.readLine()) != null){
+                    splitedString = buffer.split("\\s+");
+                    parent = new Parent();
+                    ObservableList<Integer> chromosome = FXCollections.observableArrayList();
+                    int i = 0;
+                    do{
+                        chromosome.add(Integer.parseInt(splitedString[i]));
+                        i++;
+                    }while(Integer.parseInt(splitedString[i]) == 0 || Integer.parseInt(splitedString[i]) == 1);
+                    parent.setChromosome(chromosome);
+                    int weight = Integer.parseInt(splitedString[i]);
+                    i++;
+                    int utility = Integer.parseInt(splitedString[i]);
+                    parent.setWeight(weight);
+                    parent.setUtility(utility);
+                }
+                task.setParents(parents);
+                task.setSize(parents.size());
 
                 br.close();
                 GASolver.getInstance().setTask(task);
                 GASolver.getInstance().setParentsChoice(task.getParentsChoiceMethod());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+                initializeThingsTable(task.getThings());
+                initializeParentsTable(task.getParents());
+            } catch (Exception e) {
+                AlertBox.display("Помилка", "Файл з початковою умовою - пошкоджений.");
             }
         }
     }
@@ -306,8 +388,6 @@ public class MainController {
                         bw.write(buffer);
                         bw.newLine();
                     }
-                    bw.write(buffer);
-                    bw.newLine();
 
                     List<Parent> parents = task.getParents();
                     buffer = "Набір предків(хромосома, вага, корисність): ";
