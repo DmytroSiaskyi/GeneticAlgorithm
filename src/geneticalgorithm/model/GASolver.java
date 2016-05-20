@@ -27,6 +27,10 @@ public class GASolver {
         }
         return instance;
     }
+
+    /**
+     * Set parents choice method
+     */
     public void setParentsChoice(String method){
         switch (method){
             case "Панміксія":

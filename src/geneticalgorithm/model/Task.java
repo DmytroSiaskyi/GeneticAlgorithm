@@ -27,39 +27,43 @@ public class Task implements Cloneable{
     /**
      * Default constructor.
      */
-    public Task(){
-//        Random random = new Random();
-//        int size = 10;
-//        int mutationPointsNumber;
-//        iterations = random.nextInt(5) + 3;
-//        backpackMaxWeight = (random.nextInt(5) + 3) * 100;
-//        parentsChoiceMethod = "Панміксія";
-//
-//        crossingPointsList = new ArrayList<>();
-//        crossingPoints = mutationPointsNumber= size / 5;
-//        staticCrossingPoints = true;
-//        generateCrossingPoints(crossingPoints, size);
-//
-//        mutationInversion = false;
-//        generateMutationPoints(mutationPointsNumber, size);
-//
-//        things = FXCollections.observableArrayList();
-//        int weight, utility;
-//        for(int i = 0; i < size; i++){
-//            weight = (random.nextInt(backpackMaxWeight/30) + 5) * 10;
-//            utility = random.nextInt(backpackMaxWeight) + 10;
-//            Thing thing = new Thing("C" + i, weight, utility);
-//            things.add(thing);
-//        }
-//
-//        parents = FXCollections.observableArrayList();
-//        Parent parent;
-//        for(int i = 0; i < size; i++){
-//            do {
-//                parent = generateParent(size, random);
-//            }while(parents.indexOf(parent) != -1);
-//            parents.add(parent);
-//        }
+    public Task(){}
+
+    /**
+     * Generate task with size.
+     */
+    public Task(int size){
+        Random random = new Random();
+        int mutationPointsNumber;
+        iterations = random.nextInt(5) + 3;
+        backpackMaxWeight = (random.nextInt(5) + 3) * 100;
+        parentsChoiceMethod = "Панміксія";
+
+        crossingPointsList = new ArrayList<>();
+        crossingPoints = mutationPointsNumber= size / 5;
+        staticCrossingPoints = true;
+        generateCrossingPoints(crossingPoints, size);
+
+        mutationInversion = false;
+        generateMutationPoints(mutationPointsNumber, size);
+
+        things = FXCollections.observableArrayList();
+        int weight, utility;
+        for(int i = 0; i < size; i++){
+            weight = (random.nextInt(backpackMaxWeight/30) + 5) * 10;
+            utility = random.nextInt(backpackMaxWeight) + 10;
+            Thing thing = new Thing("C" + i, weight, utility);
+            things.add(thing);
+        }
+
+        parents = FXCollections.observableArrayList();
+        Parent parent;
+        for(int i = 0; i < size; i++){
+            do {
+                parent = generateParent(size, random);
+            }while(parents.indexOf(parent) != -1);
+            parents.add(parent);
+        }
     }
     /**
      * Constructor with parameters
@@ -97,7 +101,7 @@ public class Task implements Cloneable{
     public void generateCrossingPoints(int number, int size){
         Random random = new Random();
         int newCrossPoint;
-        for(int i = 0; i < crossingPoints; i++){
+        for(int i = 0; i < number; i++){
             do{
                 newCrossPoint = random.nextInt(size - 1);
             }while(crossingPointsList.indexOf(newCrossPoint + 1) != -1 && crossingPointsList.indexOf(newCrossPoint - 1) != -1);
@@ -153,20 +157,7 @@ public class Task implements Cloneable{
         result.setChromosomeList(chromosome);
         return result;
     }
-    public Task clone(){
-        Task task = new Task();
-        task.setSize(size);
-        task.setThings(things);
-        task.setStaticCrossingPoints(staticCrossingPoints);
-        task.setCrossingPointsList(crossingPointsList);
-        task.setIterations(iterations);
-        task.setBackpackMaxWeight(backpackMaxWeight);
-        task.setMutationInversion(mutationInversion);
-        task.setCrossingPoints(crossingPoints);
-        task.setParents(parents);
-        task.setParentsChoiceMethod(parentsChoiceMethod);
-        return task;
-    }
+
     public int getSize() {
         return size;
     }

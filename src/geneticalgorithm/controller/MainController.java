@@ -73,16 +73,12 @@ public class MainController {
     private List<TableColumn<Parent, Integer>> columns;
 
     private GASolver gaSolver;
-    private TaskArchitector taskArchitector;
-
 
     /**
      * Initialize controller and stage
      */
     @FXML
     public void initialize(){
-        taskArchitector = new TaskArchitector();
-        taskArchitector.setTaskBuilder(new GenTaskBuilder());
         mutationPoints.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
         parentsChoice.setItems(FXCollections.observableArrayList("Панміксія", "Імбридинг", "Аутбридинг", "Селекція", "Метод рулетки"));
         generateDataButton.setOnAction(e -> generateTaskData());
@@ -102,7 +98,7 @@ public class MainController {
             AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/aboutAuthorView.fxml"));
             Stage resultStage = new Stage();
             resultStage.setTitle("Курсовий проект");
-            resultStage.setScene(new Scene(scene, 700, 500));
+            resultStage.setScene(new Scene(scene, 600, 400));
             resultStage.setResizable(false);
             resultStage.initModality(Modality.APPLICATION_MODAL);
             Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
@@ -121,7 +117,7 @@ public class MainController {
             AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/aboutAlgorithmView.fxml"));
             Stage resultStage = new Stage();
             resultStage.setTitle("Генетичний алгоритм");
-            resultStage.setScene(new Scene(scene, 700, 500));
+            resultStage.setScene(new Scene(scene, 600, 400));
             resultStage.setResizable(false);
             resultStage.initModality(Modality.APPLICATION_MODAL);
             Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
@@ -217,29 +213,36 @@ public class MainController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Відкрити умову завдання");
         File file = fileChooser.showOpenDialog((Stage) startButton.getScene().getWindow());
-        String[] splitedString;
-        try {
-            FileReader fr = new FileReader(file.getAbsolutePath());
-            BufferedReader br = new BufferedReader(fr);
+        if(file != null) {
+            String[] splitedString;
+            Task task = new Task();
+            try {
+                String buffer;
+                FileReader fr = new FileReader(file.getAbsolutePath());
+                BufferedReader br = new BufferedReader(fr);
 
-            int maxBackPackWeight;
+                int maxBackPackWeight;
+                buffer = br.readLine();
+                splitedString = buffer.split(": ");
+                maxBackPackWeight = Integer.parseInt(splitedString[1]);
+                task.setBackpackMaxWeight(maxBackPackWeight);
 
-            String buffer;
-            buffer = br.readLine();
-            splitedString = buffer.split(": ");
-            maxBackPackWeight = Integer.parseInt(splitedString[1]);
-            br.close();
-        }catch (IOException e){
-            e.printStackTrace();
+
+
+                br.close();
+                GASolver.getInstance().setTask(task);
+                GASolver.getInstance().setParentsChoice(task.getParentsChoiceMethod());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        System.out.println(file);
     }
 
     /**
      * Save task data to .txt file
      */
     private void saveTask(){
-        Task task = gaSolver.getTask();
+        Task task = gaSolver.getInstance().getTask();
         if(task != null) {
             String test = updateTask();
             if(!test.equals("success")){
@@ -347,9 +350,8 @@ public class MainController {
      * Generate task with task details
      */
     private void generateTaskData(){
-        taskArchitector.constructTask(10);
-        Task task = taskArchitector.getTask();
         gaSolver = GASolver.getInstance();
+        Task task = new Task(10);
         gaSolver.setTask(task);
         parentsChoice.setValue(parentsChoice.getItems().get(0));
         initializeThingsTable(task.getThings());
@@ -359,7 +361,9 @@ public class MainController {
         mutationPoints.setValue(mutationPoints.getItems().get(task.getMutationPoints().size()-1));
         iterNumber.setText(task.getIterations() + "");
         staticCrossingPoints.setSelected(true);
+        gaSolver.setParentsChoice(task.getParentsChoiceMethod());
     }
+
     /**
      * Initialize things table data
      *

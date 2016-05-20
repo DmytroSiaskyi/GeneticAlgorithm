@@ -36,6 +36,7 @@ public class Parent {
         this.weight = new SimpleIntegerProperty(weight);
         this.utility = new SimpleIntegerProperty(utility);
     }
+
     @Override
     public boolean equals(Object o){
         if(o == null)
