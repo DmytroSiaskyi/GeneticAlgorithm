@@ -11,6 +11,8 @@ import java.util.Random;
  * @author Dmytro Siaskyi dmitry.syaskiy@gmail.com.
  */
 public class Task implements Cloneable{
+
+    private int size;
     private ObservableList<Thing> things;
     private ObservableList<Parent> parents;
     private List<Integer> crossingPointsList;
@@ -20,7 +22,6 @@ public class Task implements Cloneable{
     private String parentsChoiceMethod;
     private Boolean staticCrossingPoints;
     private Boolean mutationInversion;
-    private int size;
 
     private Integer crossingPoints;
 
@@ -60,7 +61,7 @@ public class Task implements Cloneable{
         Parent parent;
         for(int i = 0; i < size; i++){
             do {
-                parent = generateParent(size, random);
+                parent = generateParent(size);
             }while(parents.indexOf(parent) != -1);
             parents.add(parent);
         }
@@ -95,15 +96,15 @@ public class Task implements Cloneable{
     /**
      * Generate crossing points
      *
-     * @param number
-     * @param size
+     * @param pointsNumber
+     * @param numberOfThings
      */
-    public void generateCrossingPoints(int number, int size){
+    public void generateCrossingPoints(int pointsNumber, int numberOfThings){
         Random random = new Random();
         int newCrossPoint;
-        for(int i = 0; i < number; i++){
+        for(int i = 0; i < pointsNumber; i++){
             do{
-                newCrossPoint = random.nextInt(size - 1);
+                newCrossPoint = random.nextInt(numberOfThings - 1);
             }while(crossingPointsList.indexOf(newCrossPoint + 1) != -1 && crossingPointsList.indexOf(newCrossPoint - 1) != -1);
             crossingPointsList.add(newCrossPoint);
         }
@@ -112,16 +113,16 @@ public class Task implements Cloneable{
     /**
      * Generate mutation points
      *
-     * @param number
-     * @param size
+     * @param pointsNumber
+     * @param parentsNumber
      */
-    public void generateMutationPoints(int number, int size){
+    public void generateMutationPoints(int pointsNumber, int parentsNumber){
         Random random = new Random();
         mutationPoints = new ArrayList<>();
         int mutationElement;
-        for(int i = 0; i < number; i++){
+        for(int i = 0; i < pointsNumber; i++){
             do{
-                mutationElement = random.nextInt(size);
+                mutationElement = random.nextInt(parentsNumber);
             }while (mutationPoints.indexOf(mutationElement) != -1);
             mutationPoints.add(mutationElement);
         }
@@ -130,19 +131,19 @@ public class Task implements Cloneable{
     /**
      * Create one random parent
      *
-     * @param size
-     * @param random
+     * @param numberOfThings
      */
-    private Parent generateParent(int size, Random random){
+    private Parent generateParent(int numberOfThings){
+        Random random = new Random();
         Parent result;
         int weight = 0;
         int utility = 0;
         List<Integer> chromosome = new ArrayList<>();
-        for(int j = 0; j < size; j++){
+        for(int j = 0; j < numberOfThings; j++){
             double genPosibility = random.nextDouble();
             double myPosibility = 1;
-            myPosibility /= size - j;
-            myPosibility += 1/size;
+            myPosibility /= numberOfThings - j;
+            myPosibility += 1/numberOfThings;
             if((genPosibility <= myPosibility)&&(weight + things.get(j).getWeight() <= backpackMaxWeight)){
                 chromosome.add(1);
                 utility += things.get(j).getUtility();

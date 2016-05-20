@@ -49,9 +49,7 @@ public class GASolver {
         this.parentsChoice = parentsChoice;
     }
 
-    public Task getTask() {
-        return task;
-    }
+    public Task getTask() { return task; }
 
     public ParentsChoice getParentsChoice() {
         return parentsChoice;

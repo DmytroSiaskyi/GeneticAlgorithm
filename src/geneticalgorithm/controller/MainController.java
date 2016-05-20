@@ -187,6 +187,7 @@ public class MainController {
                 if(iterations < 1){
                     result = "Кількість ітерацій повинна бути більше або рівна 1.";
                 }else{
+                    /* Додати перевірку на зміну кількості точок кросинговеру */
                     Task task = gaSolver.getTask();
                     task.setBackpackMaxWeight(newMaxWeight);
                     task.setCrossingPoints(crossPoints);
@@ -197,7 +198,6 @@ public class MainController {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
             result = "Заповніть всі поля налаштування роботи алгоритму.";
         }
         return result;

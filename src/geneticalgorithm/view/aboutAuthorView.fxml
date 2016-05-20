@@ -12,7 +12,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextArea editable="false" layoutX="14.0" layoutY="43.0" prefHeight="300.0" prefWidth="568.0" AnchorPane.bottomAnchor="57.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0" />
+      <TextArea editable="false" layoutX="14.0" layoutY="43.0" prefHeight="300.0" prefWidth="568.0" text="Даний проект створений у рамках курсового проекту з дисципліни &quot;Додаткові розділи дослідже-&#10;ння операцій&quot;.&#10;Автори:&#10; - Сяський Дмитро Павлович&#10; - Андрусяк Кирило Анатолійович&#10;Метою даного проекту є перевірка знань в студентів на тему &quot;Генетичний алгоритм&quot;. Він дозволяє &#10;генерувати задачу про рюкзак, та  розвязувати, як  в  попкроковому  режимі  так  і  в  звичайному.&#10;Також можливе збереження розвязку в текстовий файл. Для розвязання задачі  надаються  безліч&#10;налаштувань, що довзоляють порівнювати роботу різних операторів на одній вхідній умові.  &#10;" AnchorPane.bottomAnchor="57.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0" />
       <Button layoutX="496.0" layoutY="353.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Закрити" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="18.0" />
    </children>
 </AnchorPane>
