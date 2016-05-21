@@ -132,9 +132,7 @@ public class GASolver {
             addChildrens(chosenParents.get(0), chosenParents.get(1));
             iterationResult += "Результат ітерації: " + "\n";
             iterationResult += printParentsTable();
-            if(showIterations){
-                result += iterationResult;
-            }
+
             currentBestParent = getBestResult();
             if(currentBestParent.getUtility() != bestResult){
                 bestResult = currentBestParent.getUtility();
@@ -142,10 +140,14 @@ public class GASolver {
             }else{
                 bestResultNotChanged++;
             }
-
+            if(showIterations){
+                result += iterationResult;
+            }
             if(bestResultNotChanged == 20){
+                result += "За двадцять ітерацій розвязок не змінився!" + "\n";
                 break;
             }
+
         }
         if(currentBestParent == null){
             currentBestParent = getBestResult();
@@ -186,23 +188,41 @@ public class GASolver {
 
     private void addChildrens(Parent first, Parent second){
         ObservableList<Parent> parents = task.getParents();
+        Parent p1, p2;
         if(first != null && second != null){
-            //parents.remove(getWorstParent());
-            //parents.remove(getWorstParent());
-            parents.add(first);
-            parents.add(second);
+            p1 = new Parent(first);
+            p2 = new Parent(second);
+            Parent b1 = getWorstParent();
+            parents = removeElement(b1, parents);
+            Parent b2 = getWorstParent();
+            parents = removeElement(b2, parents);
+            parents.add(p1);
+            parents.add(p2);
         }else{
             if(first != null){
-                //parents.remove(getWorstParent());
-                parents.add(first);
-            }else{
-               // parents.remove(getWorstParent());
-                parents.add(second);
+                Parent b1 = getWorstParent();
+                p1 = new Parent(first);
+                parents = removeElement(b1, parents);
+                parents.add(p1);
+            }
+            if(second != null){
+                Parent b2 = getWorstParent();
+                p2 = new Parent(second);
+                parents = removeElement(b2, parents);
+                parents.add(p2);
             }
         }
         task.setParents(parents);
     }
-
+    private ObservableList<Parent> removeElement(Parent parent, ObservableList<Parent> parents){
+        ObservableList<Parent> newList = FXCollections.observableArrayList();
+        for(int i = 0; i < parents.size(); i++){
+            if(parents.get(i) != parent){
+                newList.add(parents.get(i));
+            }
+        }
+        return newList;
+    }
     private Parent getWorstParent(){
         Parent parent = null;
         int minUtility = Integer.MAX_VALUE;
