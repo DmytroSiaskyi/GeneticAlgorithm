@@ -93,7 +93,11 @@ public class GASolver {
                 iterationResult += mutationPoints.get(j) + " ";
             }
             iterationResult += "\n";
-            mutation(mutationPoints, chosenParents.get(0), chosenParents.get(1));
+            if(task.getMutationInversion()){
+                inversMutation(mutationPoints, chosenParents.get(0), chosenParents.get(1));
+            }else {
+                mutation(mutationPoints, chosenParents.get(0), chosenParents.get(1));
+            }
             iterationResult += "Результат мутації: " + "\n";
             iterationResult += chosenParents.get(0).toString() + "\n";
             iterationResult += chosenParents.get(1).toString() + "\n";
@@ -171,8 +175,51 @@ public class GASolver {
         parent.setUtility(utility);
     }
 
+    private void inversMutation(List<Integer> mutationPoints, Parent first, Parent second){
+        ObservableList<Integer> chromosome1 = first.getChromosome();
+        ObservableList<Integer> chromosome2 = second.getChromosome();
+        Collections.sort(mutationPoints);
+        int x1 = mutationPoints.get(0) - 1;
+        int x2 = mutationPoints.get(1) - 1;
+        int buffer1, buffer2;
+        for(int i = 0; i < (x2-x1)/2 + 1; i++){
+            buffer1 = chromosome1.get(x2);
+            buffer2 = chromosome2.get(x2);
+            chromosome1.set(x2, chromosome1.get(x1));
+            chromosome1.set(x1, buffer1);
+            chromosome2.set(x2, chromosome2.get(x1));
+            chromosome2.set(x1, buffer2);
+            x1++;
+            x2--;
+        }
+        first.setChromosome(chromosome1);
+        second.setChromosome(chromosome2);
+        refreshData(first);
+        refreshData(second);
+    }
+
     private void mutation(List<Integer> mutationPoints, Parent first, Parent second){
-        //Here will be method
+        ObservableList<Integer> chromosome1 = first.getChromosome();
+        ObservableList<Integer> chromosome2 = second.getChromosome();
+        int currentPoint;
+        for(int i = 0; i < mutationPoints.size(); i++){
+            currentPoint = mutationPoints.get(i) -1;
+            if(chromosome1.get(currentPoint) == 0){
+                chromosome1.set(currentPoint, 1);
+            }else{
+                chromosome1.set(currentPoint, 0);
+            }
+
+            if(chromosome2.get(currentPoint) == 0){
+                chromosome2.set(currentPoint, 1);
+            }else{
+                chromosome2.set(currentPoint, 0);
+            }
+        }
+        first.setChromosome(chromosome1);
+        second.setChromosome(chromosome2);
+        refreshData(first);
+        refreshData(second);
     }
 
     private void selection(Parent first, Parent second){

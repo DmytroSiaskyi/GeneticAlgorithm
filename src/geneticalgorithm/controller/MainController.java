@@ -192,9 +192,12 @@ public class MainController {
                             result = "Кількість точок кросинговеру занадто велика.";
                         }
                         if(mutationPointsNumber < 1){
-                            result = "Кількість точок мутації повинна бути більше 1.";
+                            result = "Кількість точок мутації повинна бути більше 0.";
                         }
                     }
+                }
+                if(inversions && mutationPointsNumber != 2){
+                    result = "Кількість точок мутації повинна бути рівна 2 для інверсії.";
                 }
             }
             if(!result.equals("success")){
