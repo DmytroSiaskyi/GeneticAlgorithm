@@ -101,15 +101,36 @@ public class GASolver {
             iterationResult += "Результат мутації: " + "\n";
             iterationResult += chosenParents.get(0).toString() + "\n";
             iterationResult += chosenParents.get(1).toString() + "\n";
-            iterationResult += "Етап селекції: " + "\n";
-            selection(chosenParents.get(0), chosenParents.get(1));
-            iterationResult += chosenParents.get(0).toString() + "\n";
-            iterationResult += chosenParents.get(1).toString() + "\n";
+
+            if(chosenParents.get(0).getWeight() > task.getBackpackMaxWeight()){
+                selection(chosenParents.get(0));
+            }else{
+                iterationResult += "Нащадок 1 не підходить під перевірку максимальної  ваги." + "\n";
+                chosenParents.set(0, null);
+            }
+            if(chosenParents.get(1).getWeight() > task.getBackpackMaxWeight()){
+                selection(chosenParents.get(1));
+            }else{
+                iterationResult += "Нащадок 2 не підходить під перевірку максимальної  ваги." + "\n";
+                chosenParents.set(1, null);
+            }
+            iterationResult += "Етап селекції(визначамо вагу, яку ще можна покласти в рюкзак): " + "\n";
+            if(chosenParents.get(0) != null){
+                selection(chosenParents.get(0));
+                iterationResult += chosenParents.get(0).toString() + "\n";
+            }
+            if(chosenParents.get(1) != null){
+                selection(chosenParents.get(1));
+                iterationResult += chosenParents.get(1).toString() + "\n";
+            }
+            addChildrens(chosenParents.get(0), chosenParents.get(1));
+            iterationResult += "Результат ітерації: " + "\n";
+            iterationResult += printParentsTable();
             if(showIterations){
                 result += iterationResult;
             }
-            //check maxWitght limit and add new parents to list
-            //print new parents list
+
+            //check is changed best result
         }
         result += "-----------------------------------\n";
         result += "             Результат             \n";
@@ -117,6 +138,24 @@ public class GASolver {
         result += printResult();
 
         return result;
+    }
+    private String printParentsTable(){
+        String result = "";
+        List<Parent> parents = task.getParents();
+
+        for(int i = 0; i < parents.size(); i++){
+            Parent parent = parents.get(i);
+            for(int j = 0; j < task.getThings().size(); j ++){
+                result += parent.getChromosome().get(j) + " ";
+            }
+            result += parent.getWeight() + " " + parent.getUtility() + "\n";
+        }
+
+        return result;
+    }
+
+    private void addChildrens(Parent first, Parent second){
+        //Here will be method
     }
 
     private void crossingover(List<Integer> crossingPoints, Parent first, Parent second){
@@ -222,8 +261,33 @@ public class GASolver {
         refreshData(second);
     }
 
-    private void selection(Parent first, Parent second){
-        //Here will be method
+    /**
+     * Selection method
+     */
+    private void selection(Parent parent){
+        int weight = task.getBackpackMaxWeight() - parent.getWeight();
+        Thing forFirst = getBestThing(weight, parent.getChromosome());
+        int index;
+        if(forFirst != null){
+            index = task.getThings().indexOf(forFirst);
+            parent.getChromosome().set(index, 1);
+        }
+        refreshData(parent);
+    }
+
+    /**
+     * Return best thing, that can add to parent
+     */
+    private Thing getBestThing(int weight, ObservableList<Integer> chromosome){
+        Thing thing = null;
+        int maxWeight = 0;
+        for(int i = 0; i < task.getThings().size(); i++){
+            if(chromosome.get(i) == 0 && task.getThings().get(i).getWeight() <= weight && maxWeight <= task.getThings().get(i).getWeight()){
+                thing = task.getThings().get(i);
+                maxWeight = thing.getWeight();
+            }
+        }
+        return thing;
     }
 
     /**
