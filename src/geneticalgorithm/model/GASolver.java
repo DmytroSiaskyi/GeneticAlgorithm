@@ -1,6 +1,7 @@
 package geneticalgorithm.model;
 
 import geneticalgorithm.model.parentschoice.Inbreeding;
+import geneticalgorithm.model.parentschoice.Outbreeding;
 import geneticalgorithm.model.parentschoice.Panmixia;
 import geneticalgorithm.model.parentschoice.ParentsChoice;
 import javafx.collections.FXCollections;
@@ -44,6 +45,9 @@ public class GASolver {
                 break;
             case "Імбридинг":
                 parentsChoice = new Inbreeding();
+                break;
+            case "Аутбридинг":
+                parentsChoice = new Outbreeding();
                 break;
             default:
                 parentsChoice = new Panmixia();

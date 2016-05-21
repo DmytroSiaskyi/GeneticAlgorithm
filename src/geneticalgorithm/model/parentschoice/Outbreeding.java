@@ -10,7 +10,7 @@ import java.util.Random;
 /**
  * @author Dmytro Siaskyi dmitry.syaskiy@gmail.com.
  */
-public class Inbreeding implements ParentsChoice{
+public class Outbreeding implements ParentsChoice{
 
     @Override
     public List<Parent> getParents(Task task) {
@@ -18,15 +18,15 @@ public class Inbreeding implements ParentsChoice{
         List<Parent> result = new ArrayList<>();
         Random random = new Random();
         result.add(new Parent(parents.get(random.nextInt(parents.size()-1))));
-        result.add(new Parent(getClosestParent(parents, result.get(0))));
+        result.add(new Parent(getOutmostParent(parents, result.get(0))));
         return result;
     }
-    private Parent getClosestParent(List<Parent> parents, Parent parent){
+    private Parent getOutmostParent(List<Parent> parents, Parent parent){
         Parent result = null;
-        int difference = Integer.MAX_VALUE;
+        int difference = 0;
         int indexOfCurrent = parents.indexOf(parent);
         for(int i = 0; i < parents.size(); i++){
-            if((Math.abs(parents.get(i).getUtility() - parent.getUtility()) < difference) && (indexOfCurrent != i)){
+            if((Math.abs(parents.get(i).getUtility() - parent.getUtility()) > difference) && (indexOfCurrent != i)){
                 result = parents.get(i);
                 difference = Math.abs(parents.get(i).getUtility() - parent.getUtility());
             }

@@ -84,7 +84,7 @@ public class MainController {
     @FXML
     public void initialize(){
         mutationPoints.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
-        parentsChoice.setItems(FXCollections.observableArrayList("Панміксія", "Імбридинг", "Аутбридинг", "Селекція", "Метод рулетки"));
+        parentsChoice.setItems(FXCollections.observableArrayList("Панміксія", "Імбридинг", "Аутбридинг"));
         generateDataButton.setOnAction(e -> generateTaskData());
         openItem.setOnAction(e -> openTask());
         saveItem.setOnAction(e -> saveTask());
