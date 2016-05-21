@@ -214,6 +214,7 @@ public class MainController {
                         task.generateMutationPoints(mutationPointsNumber, task.getParents().size());
                     }
                     task.setIterations(iterations);
+                    task.setParentsChoiceMethod(operator);
                     gaSolver.setTask(task);
                 }
             }

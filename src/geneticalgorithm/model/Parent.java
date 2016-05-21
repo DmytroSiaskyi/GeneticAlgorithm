@@ -42,8 +42,8 @@ public class Parent {
         for(int i = 0; i < chromosome.size(); i++){
             parent += chromosome.get(i) + " ";
         }
-        parent += utility + " ";
-        parent += weight;
+        parent += weight.getValue() + " ";
+        parent += utility.getValue();
         return parent;
     }
     @Override

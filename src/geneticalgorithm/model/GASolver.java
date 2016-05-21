@@ -3,7 +3,11 @@ package geneticalgorithm.model;
 import geneticalgorithm.model.parentschoice.Inbreeding;
 import geneticalgorithm.model.parentschoice.Panmixia;
 import geneticalgorithm.model.parentschoice.ParentsChoice;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,21 +52,24 @@ public class GASolver {
     }
 
     public String solve(boolean showIterations){
+        setParentsChoice(task.getParentsChoiceMethod());
         String result = "-----------------------------------\n";
         result += "        Початкова умова            \n";
         result += "-----------------------------------\n";
         result += printTask();
 
+        String iterationResult;
         for(int i = 0; i < task.getIterations(); i++){
-            result += "-----------------------------------\n";
-            result += "             Ітерація " + (i + 1) + "\n";
-            result += "-----------------------------------\n";
+            iterationResult = "";
+            iterationResult += "-----------------------------------\n";
+            iterationResult += "             Ітерація " + (i + 1) + "\n";
+            iterationResult += "-----------------------------------\n";
 
             List<Parent> chosenParents = parentsChoice.getParents(task);
-            result += "Обрані для схрещування батьки: \n";
+            iterationResult += "Обрані для схрещування батьки (хромосома, вага, корисність): \n";
             if(chosenParents != null) {
-                result += chosenParents.get(0).toString() + "\n";
-                result += chosenParents.get(1).toString() + "\n";
+                iterationResult += chosenParents.get(0).toString() + " (" + (task.getParents().indexOf( chosenParents.get(0)) + 1) + ")\n";
+                iterationResult += chosenParents.get(1).toString() + " (" + (task.getParents().indexOf( chosenParents.get(1)) + 1) + ")\n";
             }else{
                 result = "Помилка виконання.";
                 return result;
@@ -70,35 +77,36 @@ public class GASolver {
             if(!task.getStaticCrossingPoints()){
                 task.generateCrossingPoints(task.getCrossingPointsList().size(), task.getThings().size());
             }
-            result += "Точки кросинговеру: ";
+            iterationResult += "Точки кросинговеру: ";
             List<Integer> crossingPoints = task.getCrossingPointsList();
-            for(int j = 0; j < crossingPoints.size(); i++){
-                result += crossingPoints.get(j) + " ";
+            for(int j = 0; j < crossingPoints.size(); j++){
+                iterationResult += crossingPoints.get(j) + " ";
             }
-            result += "\n";
+            iterationResult += "\n";
             crossingover(crossingPoints, chosenParents.get(0), chosenParents.get(1));
-            result += "Результат кросинговеру: " + "\n";
-            result += chosenParents.get(0).toString() + "\n";
-            result += chosenParents.get(1).toString() + "\n";
-            result += "Точки мутації: ";
+            iterationResult += "Результат кросинговеру: " + "\n";
+            iterationResult += chosenParents.get(0).toString() + "\n";
+            iterationResult += chosenParents.get(1).toString() + "\n";
+            iterationResult += "Точки мутації: ";
             List<Integer> mutationPoints = task.getMutationPoints();
             for(int j = 0; j < mutationPoints.size(); j++){
-                result += mutationPoints.get(j) + " ";
+                iterationResult += mutationPoints.get(j) + " ";
             }
-            result += "\n";
+            iterationResult += "\n";
             mutation(mutationPoints, chosenParents.get(0), chosenParents.get(1));
-            result += "Результат мутації: " + "\n";
-            result += chosenParents.get(0).toString() + "\n";
-            result += chosenParents.get(1).toString() + "\n";
-            result += "Етап селекції: " + "\n";
+            iterationResult += "Результат мутації: " + "\n";
+            iterationResult += chosenParents.get(0).toString() + "\n";
+            iterationResult += chosenParents.get(1).toString() + "\n";
+            iterationResult += "Етап селекції: " + "\n";
             selection(chosenParents.get(0), chosenParents.get(1));
-            result += chosenParents.get(0).toString() + "\n";
-            result += chosenParents.get(1).toString() + "\n";
-
+            iterationResult += chosenParents.get(0).toString() + "\n";
+            iterationResult += chosenParents.get(1).toString() + "\n";
+            if(showIterations){
+                result += iterationResult;
+            }
             //check maxWitght limit and add new parents to list
             //print new parents list
         }
-
         result += "-----------------------------------\n";
         result += "             Результат             \n";
         result += "-----------------------------------\n";
@@ -108,7 +116,59 @@ public class GASolver {
     }
 
     private void crossingover(List<Integer> crossingPoints, Parent first, Parent second){
-        //Here will be method
+        Collections.sort(crossingPoints);
+        ObservableList<Integer> chromosome1 = FXCollections.observableArrayList();
+        ObservableList<Integer> chromosome2 = FXCollections.observableArrayList();
+        for(int i = 0; i < first.getChromosome().size(); i++){
+            chromosome1.add(first.getChromosome().get(i));
+            chromosome2.add(second.getChromosome().get(i));
+        }
+        boolean addedLastPoint = false;
+        if(crossingPoints.size() % 2 != 0){
+            crossingPoints.add(chromosome1.size());
+            addedLastPoint = true;
+        }
+        int intervals = crossingPoints.size() / 2;
+        int pointInList = 0;
+        crossingPoints.set(0, crossingPoints.get(0) + 1);
+        for(int i = 0; i < intervals; i++){
+            for(int j = crossingPoints.get(pointInList); j < crossingPoints.get(pointInList + 1)+1; j++){
+                chromosome1.set(j-1, chromosome2.get(j-1));
+            }
+            pointInList += 2;
+        }
+        pointInList = 0;
+        for(int i = 0; i < intervals; i++){
+            for(int j = crossingPoints.get(pointInList); j < crossingPoints.get(pointInList + 1) + 1; j++){
+                chromosome2.set(j-1, first.getChromosome().get(j-1));
+            }
+            pointInList += 2;
+        }
+        first.setChromosome(chromosome1);
+        second.setChromosome(chromosome2);
+        refreshData(first);
+        refreshData(second);
+        crossingPoints.set(0, crossingPoints.get(0) - 1);
+        if(addedLastPoint){
+            crossingPoints.remove(crossingPoints.size()-1);
+        }
+    }
+
+    /**
+     * Calculate and set new weight and utility
+     */
+    private void refreshData(Parent parent){
+        List<Integer> chromosome = parent.getChromosome();
+        int weight = 0;
+        int utility = 0;
+        for(int i = 0; i < chromosome.size(); i++){
+            if(chromosome.get(i) == 1){
+                weight += task.getThings().get(i).getWeight();
+                utility += task.getThings().get(i).getUtility();
+            }
+        }
+        parent.setWeight(weight);
+        parent.setUtility(utility);
     }
 
     private void mutation(List<Integer> mutationPoints, Parent first, Parent second){
@@ -127,13 +187,16 @@ public class GASolver {
 
         printedTask += "Максимальна вага рюкзака: " + task.getBackpackMaxWeight() + "\n";
         printedTask += "Оператор вибору батьків: " + task.getParentsChoiceMethod() + "\n";
-        printedTask += "Точки кросинговеру: ";
-        List<Integer> crossingPoints = task.getCrossingPointsList();
-        for(int i = 0; i < crossingPoints.size(); i++){
-            printedTask += crossingPoints.get(i) + " ";
+        if(task.getStaticCrossingPoints()) {
+            printedTask += "Точки кросинговеру: ";
+            List<Integer> crossingPoints = task.getCrossingPointsList();
+            for (int i = 0; i < crossingPoints.size(); i++) {
+                printedTask += crossingPoints.get(i) + " ";
+            }
+            printedTask += "\n";
+        }else {
+            printedTask += "Постійність точок кросинговеру: " + task.getStaticCrossingPoints() + "\n";
         }
-        printedTask += "\n";
-        printedTask += "Постійність точок кросинговеру: " + task.getStaticCrossingPoints() + "\n";
         printedTask += "Точки мутації: ";
         List<Integer> mutationPoints = task.getMutationPoints();
         for(int i = 0; i < mutationPoints.size(); i++){
