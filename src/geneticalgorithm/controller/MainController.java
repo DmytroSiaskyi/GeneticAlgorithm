@@ -170,7 +170,7 @@ public class MainController {
      */
     private String updateTask(){
         String result = "success";
-        Task task = gaSolver.getTask();
+        Task task = GASolver.getInstance().getTask();
         try {
             int newMaxWeight = Integer.parseInt(maxWeight.getText());
             String operator = parentsChoice.getValue();
@@ -218,7 +218,7 @@ public class MainController {
                     }
                     task.setIterations(iterations);
                     task.setParentsChoiceMethod(operator);
-                    gaSolver.setTask(task);
+                    GASolver.getInstance().setTask(task);
                 }
             }
         }catch (Exception e){
