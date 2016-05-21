@@ -144,6 +144,7 @@ public class GASolver {
                 result += iterationResult;
             }
             if(bestResultNotChanged == 20){
+                result += "Виконано " + i + " ітреацій." + "\n";
                 result += "За двадцять ітерацій розвязок не змінився!" + "\n";
                 break;
             }
@@ -194,6 +195,7 @@ public class GASolver {
             p2 = new Parent(second);
             Parent b1 = getWorstParent();
             parents = removeElement(b1, parents);
+            task.setParents(parents);
             Parent b2 = getWorstParent();
             parents = removeElement(b2, parents);
             parents.add(p1);
