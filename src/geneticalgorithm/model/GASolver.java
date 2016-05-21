@@ -52,6 +52,8 @@ public class GASolver {
     }
 
     public String solve(boolean showIterations){
+        int bestResult = 0;
+        int bestResultNotChanged = 0;
         setParentsChoice(task.getParentsChoiceMethod());
         String result = "-----------------------------------\n";
         result += "        Початкова умова            \n";
@@ -59,6 +61,7 @@ public class GASolver {
         result += printTask();
 
         String iterationResult;
+        Parent currentBestParent = null;
         for(int i = 0; i < task.getIterations(); i++){
             iterationResult = "";
             iterationResult += "-----------------------------------\n";
@@ -102,19 +105,22 @@ public class GASolver {
             iterationResult += chosenParents.get(0).toString() + "\n";
             iterationResult += chosenParents.get(1).toString() + "\n";
 
-            if(chosenParents.get(0).getWeight() > task.getBackpackMaxWeight()){
+            if(chosenParents.get(0).getWeight() < task.getBackpackMaxWeight()){
                 selection(chosenParents.get(0));
             }else{
                 iterationResult += "Нащадок 1 не підходить під перевірку максимальної  ваги." + "\n";
                 chosenParents.set(0, null);
             }
-            if(chosenParents.get(1).getWeight() > task.getBackpackMaxWeight()){
+
+            if(chosenParents.get(1).getWeight() < task.getBackpackMaxWeight()){
                 selection(chosenParents.get(1));
             }else{
                 iterationResult += "Нащадок 2 не підходить під перевірку максимальної  ваги." + "\n";
                 chosenParents.set(1, null);
             }
-            iterationResult += "Етап селекції(визначамо вагу, яку ще можна покласти в рюкзак): " + "\n";
+            if(chosenParents.get(0) != null && chosenParents.get(1) != null) {
+                iterationResult += "Етап селекції(визначамо вагу, яку ще можна покласти в рюкзак): " + "\n";
+            }
             if(chosenParents.get(0) != null){
                 selection(chosenParents.get(0));
                 iterationResult += chosenParents.get(0).toString() + "\n";
@@ -129,13 +135,25 @@ public class GASolver {
             if(showIterations){
                 result += iterationResult;
             }
+            currentBestParent = getBestResult();
+            if(currentBestParent.getUtility() != bestResult){
+                bestResult = currentBestParent.getUtility();
+                bestResultNotChanged = 0;
+            }else{
+                bestResultNotChanged++;
+            }
 
-            //check is changed best result
+            if(bestResultNotChanged == 20){
+                break;
+            }
+        }
+        if(currentBestParent == null){
+            currentBestParent = getBestResult();
         }
         result += "-----------------------------------\n";
         result += "             Результат             \n";
         result += "-----------------------------------\n";
-        result += printResult();
+        result += printResult(currentBestParent);
 
         return result;
     }
@@ -154,8 +172,47 @@ public class GASolver {
         return result;
     }
 
+    private Parent getBestResult(){
+        Parent parent = null;
+        int maxUtility = 0;
+        for(int i = 0; i < task.getParents().size(); i++){
+            if(task.getParents().get(i).getUtility() >= maxUtility){
+                parent = task.getParents().get(i);
+                maxUtility = parent.getUtility();
+            }
+        }
+        return parent;
+    }
+
     private void addChildrens(Parent first, Parent second){
-        //Here will be method
+        ObservableList<Parent> parents = task.getParents();
+        if(first != null && second != null){
+            //parents.remove(getWorstParent());
+            //parents.remove(getWorstParent());
+            parents.add(first);
+            parents.add(second);
+        }else{
+            if(first != null){
+                //parents.remove(getWorstParent());
+                parents.add(first);
+            }else{
+               // parents.remove(getWorstParent());
+                parents.add(second);
+            }
+        }
+        task.setParents(parents);
+    }
+
+    private Parent getWorstParent(){
+        Parent parent = null;
+        int minUtility = Integer.MAX_VALUE;
+        for(int i = 0; i < task.getParents().size(); i++){
+            if(task.getParents().get(i).getUtility() <= minUtility){
+               parent = task.getParents().get(i);
+               minUtility = parent.getUtility();
+            }
+        }
+        return parent;
     }
 
     private void crossingover(List<Integer> crossingPoints, Parent first, Parent second){
@@ -339,9 +396,14 @@ public class GASolver {
     /**
      * Return result of task solving in String
      */
-    private String printResult(){
+    private String printResult(Parent parent){
         String result = new String();
-        //Here will be method
+
+        result += "Кращим на останній ітерації є\n \n";
+        result += parent.toString() + "\n\n";
+        result += "Результуюча таблиця:\n";
+        result += printParentsTable();
+
         return result;
     }
 
@@ -356,6 +418,6 @@ public class GASolver {
     }
 
     public void setTask(Task task) {
-        this.task = task;
+        this.task = new Task(task);
     }
 }

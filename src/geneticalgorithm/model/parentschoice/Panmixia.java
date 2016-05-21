@@ -16,12 +16,12 @@ public class Panmixia implements ParentsChoice{
         List<Parent> parents = task.getParents();
         List<Parent> result = new ArrayList<>();
         Random random = new Random();
-        result.add(parents.get(random.nextInt(parents.size()-1)));
+        result.add(new Parent(parents.get(random.nextInt(parents.size()-1))));
         Parent second;
         do {
             second = parents.get(random.nextInt(parents.size() - 1));
         }while (result.indexOf(second) != -1);
-        result.add(second);
+        result.add(new Parent(second));
         return result;
     }
 }

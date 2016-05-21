@@ -188,7 +188,7 @@ public class MainController {
                     if(crossPoints < 2){
                         result = "Кількість точок кросинговеру повинна бути більше 2.";
                     }else{
-                        if(crossPoints > task.getParents().size()/3){
+                        if(crossPoints -1 > task.getParents().size()/3){
                             result = "Кількість точок кросинговеру занадто велика.";
                         }
                         if(mutationPointsNumber < 1){

@@ -23,6 +23,12 @@ public class Parent {
         weight = new SimpleIntegerProperty(0);
         utility = new SimpleIntegerProperty(0);
     }
+    public Parent(Parent parent){
+        this.chromosome = FXCollections.observableArrayList();
+        parent.getChromosome().forEach(c -> chromosome.add(c));
+        this.weight = new SimpleIntegerProperty(parent.getWeight());
+        this.utility = new SimpleIntegerProperty(parent.getUtility());
+    }
 
     /**
      * Constructor with parameters

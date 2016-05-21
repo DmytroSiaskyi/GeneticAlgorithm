@@ -72,6 +72,19 @@ public class Task implements Cloneable{
             parents.add(parent);
         }
     }
+
+    public Task(Task task){
+        this.things = task.getThings();
+        this.parents = task.getParents();
+        this.backpackMaxWeight = task.getBackpackMaxWeight();
+        this.crossingPointsList = task.getCrossingPointsList();
+        this.mutationPoints =task.getMutationPoints();
+        this.iterations = task.getIterations();
+        this.parentsChoiceMethod = task.getParentsChoiceMethod();
+        this.staticCrossingPoints = task.getStaticCrossingPoints();
+        this.mutationInversion = task.getMutationInversion();
+    }
+
     /**
      * Constructor with parameters
      *

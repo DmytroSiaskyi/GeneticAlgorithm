@@ -16,8 +16,8 @@ public class Inbreeding implements ParentsChoice{
         List<Parent> parents = task.getParents();
         List<Parent> result = new ArrayList<>();
         Random random = new Random();
-        result.add(parents.get(random.nextInt(parents.size()-1)));
-        result.add(getClosestParent(parents, result.get(0)));
+        result.add(new Parent(parents.get(random.nextInt(parents.size()-1))));
+        result.add(new Parent(getClosestParent(parents, result.get(0))));
         return result;
     }
     private Parent getClosestParent(List<Parent> parents, Parent parent){
