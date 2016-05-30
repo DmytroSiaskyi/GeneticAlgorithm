@@ -26,7 +26,7 @@ public class Outbreeding implements ParentsChoice{
         int difference = 0;
         int indexOfCurrent = parents.indexOf(parent);
         for(int i = 0; i < parents.size(); i++){
-            if((Math.abs(parents.get(i).getUtility() - parent.getUtility()) > difference) && (indexOfCurrent != i)){
+            if((Math.abs(parents.get(i).getUtility() - parent.getUtility()) >= difference) && (indexOfCurrent != i)){
                 result = parents.get(i);
                 difference = Math.abs(parents.get(i).getUtility() - parent.getUtility());
             }

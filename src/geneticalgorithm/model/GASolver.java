@@ -164,6 +164,49 @@ public class GASolver {
 
         return result;
     }
+
+    public ObservableList<Integer> solveForExperiment(){
+        ObservableList<Integer> result = FXCollections.observableArrayList();
+        int bestResult = 0;
+        Parent currentBestParent = null;
+        for(int i = 0; i < task.getIterations(); i++){
+            List<Parent> chosenParents = parentsChoice.getParents(task);
+            if(!task.getStaticCrossingPoints()){
+                task.generateCrossingPoints(task.getCrossingPointsList().size(), task.getThings().size());
+            }
+            List<Integer> crossingPoints = task.getCrossingPointsList();
+            crossingover(crossingPoints, chosenParents.get(0), chosenParents.get(1));
+            List<Integer> mutationPoints = task.getMutationPoints();
+            if(task.getMutationInversion()){
+                inversMutation(mutationPoints, chosenParents.get(0), chosenParents.get(1));
+            }else {
+                mutation(mutationPoints, chosenParents.get(0), chosenParents.get(1));
+            }
+
+            if(chosenParents.get(0).getWeight() < task.getBackpackMaxWeight()){
+                selection(chosenParents.get(0));
+            }else{
+                chosenParents.set(0, null);
+            }
+
+            if(chosenParents.get(1).getWeight() < task.getBackpackMaxWeight()){
+                selection(chosenParents.get(1));
+            }else{
+                chosenParents.set(1, null);
+            }
+            if(chosenParents.get(0) != null){
+                selection(chosenParents.get(0));
+            }
+            if(chosenParents.get(1) != null){
+                selection(chosenParents.get(1));
+            }
+            addChildrens(chosenParents.get(0), chosenParents.get(1));
+            currentBestParent = getBestResult();
+            bestResult = currentBestParent.getUtility();
+            result.add(bestResult);
+        }
+        return result;
+    }
     private String printParentsTable(){
         String result = "";
         List<Parent> parents = task.getParents();

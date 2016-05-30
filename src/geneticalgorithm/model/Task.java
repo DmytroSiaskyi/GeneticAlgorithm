@@ -190,6 +190,23 @@ public class Task implements Cloneable{
         return result;
     }
 
+    public Task copyTask(){
+        Task task = new Task();
+        task.setBackpackMaxWeight(backpackMaxWeight);
+        ObservableList<Thing> thingsList = FXCollections.observableArrayList();
+        things.forEach(thing -> thingsList.add(new Thing(thing.getName(), thing.getWeight(), thing.getUtility())));
+        task.setThings(thingsList);
+        ObservableList<Parent> parentsList = FXCollections.observableArrayList();
+        parents.forEach(parent -> parentsList.add(new Parent(parent)));
+        task.setParents(parentsList);
+        task.setSize(things.size());
+        task.setCrossingPoints(crossingPoints);
+        task.setMutationInversion(mutationInversion);
+        task.setStaticCrossingPoints(staticCrossingPoints);
+        task.setParentsChoiceMethod(parentsChoiceMethod);
+        task.generateMutationPoints(mutationPoints.size(),parents.size());
+        return task;
+    }
     public int getSize() {
         return size;
     }

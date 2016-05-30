@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="resultExperiment" layoutX="14.0" layoutY="137.0" prefHeight="244.0" prefWidth="570.0">
+      </TableView>
+      <Label layoutX="14.0" layoutY="14.0" text="Результати експерименту:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="44.0" text="Перший алгоритм: ">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="242.0" layoutY="44.0" text="Другий алгоритм">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="436.0" layoutY="44.0" text="Третій алгоритм">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="z1" layoutX="14.0" layoutY="73.0" text="z1 = ">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="z2" layoutX="242.0" layoutY="73.0" text="z2 = ">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="z3" layoutX="436.0" layoutY="73.0" text="z3 = ">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="deviation1" layoutX="14.0" layoutY="101.0" text="Відхилення:">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="deviation2" layoutX="242.0" layoutY="101.0" text="Відхилення:">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="deviation3" layoutX="436.0" layoutY="101.0" text="Відхилення:">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Separator layoutX="210.0" layoutY="51.0" orientation="VERTICAL" prefHeight="68.0" prefWidth="7.0" />
+      <Separator layoutX="397.0" layoutY="51.0" orientation="VERTICAL" prefHeight="68.0" prefWidth="7.0" />
+   </children>
+</AnchorPane>
