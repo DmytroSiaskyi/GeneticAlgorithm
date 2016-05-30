@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="502.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="startExp" layoutX="337.0" layoutY="248.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="112.0" text="Почати" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="53.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Label layoutX="26.0" layoutY="50.0" text="Алгоритм 1">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="26.0" layoutY="115.0" text="Алгоритм 2">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="26.0" layoutY="177.0" text="Алгоритм 3">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="26.0" layoutY="228.0" prefHeight="17.0" prefWidth="112.0" text="Кількість ітерацій:" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="26.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Separator layoutX="14.0" layoutY="76.0" prefHeight="0.0" prefWidth="468.0" />
+      <Separator layoutX="14.0" layoutY="142.0" prefHeight="3.0" prefWidth="468.0" />
+      <Separator layoutX="14.0" layoutY="206.0" prefHeight="3.0" prefWidth="468.0" />
+      <TextField fx:id="iterations" layoutX="145.0" layoutY="250.0" />
+      <Label layoutX="145.0" layoutY="14.0" text="Кількість точок кросинговеру ">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="337.0" layoutY="14.0" text="Інверсія при кросинговері">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <TextField fx:id="pointsNumber1" layoutX="145.0" layoutY="47.0" prefHeight="25.0" prefWidth="166.0" />
+      <TextField fx:id="pointsNumber2" layoutX="145.0" layoutY="112.0" prefHeight="25.0" prefWidth="166.0" />
+      <TextField fx:id="pointsNumber3" layoutX="145.0" layoutY="174.0" prefHeight="25.0" prefWidth="166.0" />
+      <CheckBox fx:id="inversion1" layoutX="337.0" layoutY="51.0" mnemonicParsing="false" text="дозволити">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="inversion2" layoutX="337.0" layoutY="115.0" mnemonicParsing="false" text="дозволити">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="inversion3" layoutX="337.0" layoutY="177.0" mnemonicParsing="false" text="дозволити">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </CheckBox>
+   </children>
+</AnchorPane>
