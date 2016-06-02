@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -98,25 +99,35 @@ public class ExperimentController {
             answers3.add(gaSolver.solveForExperiment());
         }
 
-        int best, best1, best2, best3;
-        best = 0;
-        best1 = answers1.get(answers1.size()-1);
-        best2 = answers2.get(answers2.size()-1);
-        best3 = answers3.get(answers3.size()-1);
-        if(best1 > best){
-            best = best1;
-        }
-        if(best2 > best){
-            best = best2;
-        }
-        if(best3 > best){
-            best = best3;
-        }
+        int deviation1, deviation2, deviation3;
+        deviation1 = deviation2 = deviation3 = 0;
         float difference1, difference2, difference3;
-        difference1 = ((float)(best - best1)/(float)best) * 100;
-        difference2 = ((float)(best - best2)/(float)best) * 100;
-        difference3 = ((float)(best - best3)/(float)best) * 100;
-
+        difference1 = difference2 = difference3 = 0;
+        for(int i = 0; i < answers1.size(); i++){
+            if(answers1.get(i) < answers2.get(i) || answers1.get(i) < answers3.get(i)){
+                deviation1++;
+            }
+            if(answers2.get(i) < answers1.get(i) || answers2.get(i) < answers3.get(i)){
+                deviation2++;
+            }
+            if(answers3.get(i) < answers2.get(i) || answers3.get(i) < answers1.get(i)){
+                deviation3++;
+            }
+        }
+        List<Integer> calcDifferenceList;
+        for(int i = 0; i < answers1.size(); i++){
+            calcDifferenceList = new ArrayList<>();
+            calcDifferenceList.add(answers1.get(i));
+            calcDifferenceList.add(answers2.get(i));
+            calcDifferenceList.add(answers3.get(i));
+            int max = Collections.max(calcDifferenceList);
+            difference1 += max - answers1.get(i);
+            difference2 += max - answers2.get(i);
+            difference3 += max - answers3.get(i);
+        }
+        difference1 /= taskNumber;
+        difference2 /= taskNumber;
+        difference3 /= taskNumber;
         try {
             AnchorPane scene = FXMLLoader.load(getClass().getResource("/geneticalgorithm/view/experimentResultView.fxml"));
             Stage resultStage = new Stage();
@@ -126,20 +137,27 @@ public class ExperimentController {
             resultStage.initModality(Modality.APPLICATION_MODAL);
             Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
             resultStage.getIcons().add(icon);
+            Label firstAlg = (Label) resultStage.getScene().lookup("#firstAlg");
+            firstAlg.setTooltip(new Tooltip("Оператор вибору батьків: " + operator1.getValue() + "\nКількість точок кросинговеру: " + points1.getText()));
+            Label secondAlg = (Label) resultStage.getScene().lookup("#secondAlg");
+            secondAlg.setTooltip(new Tooltip("Оператор вибору батьків: " + operator2.getValue() + "\nКількість точок кросинговеру: " + points2.getText()));
+            Label thirdAlg = (Label) resultStage.getScene().lookup("#thirdAlg");
+            thirdAlg.setTooltip(new Tooltip("Оператор вибору батьків: " + operator3.getValue() + "\nКількість точок кросинговеру: " + points3.getText()));
 
             Label z1 = (Label) resultStage.getScene().lookup("#z1");
-            z1.setText(z1.getText() + " " + best1);
+            z1.setText(z1.getText() + " " + difference1);
             Label z2 = (Label) resultStage.getScene().lookup("#z2");
-            z2.setText(z2.getText() + " " + best2);
+            z2.setText(z2.getText() + " " + difference2);
             Label z3 = (Label) resultStage.getScene().lookup("#z3");
-            z3.setText(z3.getText() + " " + best3);
+            z3.setText(z3.getText() + " " + difference3);
 
-            Label deviation1 = (Label) resultStage.getScene().lookup("#deviation1");
-            deviation1.setText(deviation1.getText() + " " + difference1 + "%");
-            Label deviation2 = (Label) resultStage.getScene().lookup("#deviation2");
-            deviation2.setText(deviation2.getText() + " " + difference2 + "%");
-            Label deviation3 = (Label) resultStage.getScene().lookup("#deviation3");
-            deviation3.setText(deviation3.getText() + " " + difference3 + "%");
+            Label deviationZ1 = (Label) resultStage.getScene().lookup("#deviation1");
+            deviationZ1.setText(deviationZ1.getText() + " " + deviation1 + "%");
+            Label deviationZ2 = (Label) resultStage.getScene().lookup("#deviation2");
+            deviationZ2.setText(deviationZ2.getText() + " " + deviation2 + "%");
+            Label deviationZ3 = (Label) resultStage.getScene().lookup("#deviation3");
+            deviationZ3.setText(deviationZ3.getText() + " " + deviation3 + "%");
+
             //TableView with all tasks results
             ObservableList<TableResultObject> resultList = FXCollections.observableArrayList();
             for(int i = 0 ; i < answers1.size(); i++){
