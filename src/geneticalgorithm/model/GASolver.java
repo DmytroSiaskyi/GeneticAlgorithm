@@ -165,8 +165,7 @@ public class GASolver {
         return result;
     }
 
-    public ObservableList<Integer> solveForExperiment(){
-        ObservableList<Integer> result = FXCollections.observableArrayList();
+    public Integer solveForExperiment(){
         int bestResult = 0;
         Parent currentBestParent = null;
         for(int i = 0; i < task.getIterations(); i++){
@@ -182,7 +181,6 @@ public class GASolver {
             }else {
                 mutation(mutationPoints, chosenParents.get(0), chosenParents.get(1));
             }
-
             if(chosenParents.get(0).getWeight() < task.getBackpackMaxWeight()){
                 selection(chosenParents.get(0));
             }else{
@@ -203,9 +201,8 @@ public class GASolver {
             addChildrens(chosenParents.get(0), chosenParents.get(1));
             currentBestParent = getBestResult();
             bestResult = currentBestParent.getUtility();
-            result.add(bestResult);
         }
-        return result;
+        return bestResult;
     }
     private String printParentsTable(){
         String result = "";

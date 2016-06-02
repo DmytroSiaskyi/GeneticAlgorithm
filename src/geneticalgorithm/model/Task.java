@@ -205,6 +205,12 @@ public class Task implements Cloneable{
         task.setStaticCrossingPoints(staticCrossingPoints);
         task.setParentsChoiceMethod(parentsChoiceMethod);
         task.generateMutationPoints(mutationPoints.size(),parents.size());
+        List<Integer> crossingPoints = new ArrayList<>();
+        crossingPointsList.forEach(point -> crossingPoints.add(point));
+        task.setCrossingPointsList(crossingPoints);
+        List<Integer> mutationPoints = new ArrayList<>();
+        mutationPoints.forEach(point -> mutationPoints.add(point));
+        task.setMutationPoints(mutationPoints);
         return task;
     }
     public int getSize() {

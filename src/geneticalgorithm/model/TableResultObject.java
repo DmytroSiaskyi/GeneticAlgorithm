@@ -7,14 +7,28 @@ import javafx.beans.property.SimpleIntegerProperty;
  * @author Dmytro Siaskyi dmitry.syaskiy@gmail.com.
  */
 public class TableResultObject {
+    private IntegerProperty taskSize;
     private IntegerProperty z1;
     private IntegerProperty z2;
     private IntegerProperty z3;
 
-    public TableResultObject(int z1, int z2, int z3){
+    public TableResultObject(int size, int z1, int z2, int z3){
+        this.taskSize = new SimpleIntegerProperty(size);
         this.z1 = new SimpleIntegerProperty(z1);
         this.z2 = new SimpleIntegerProperty(z2);
         this.z3 = new SimpleIntegerProperty(z3);
+    }
+
+    public int getTaskSize() {
+        return taskSize.get();
+    }
+
+    public IntegerProperty taskSizeProperty() {
+        return taskSize;
+    }
+
+    public void setTaskSize(int taskSize) {
+        this.taskSize.set(taskSize);
     }
 
     public int getZ1() {

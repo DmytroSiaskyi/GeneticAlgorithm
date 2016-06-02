@@ -101,27 +101,21 @@ public class MainController {
      * Display experiment view
      */
     private void experimenting(){
-        String test = updateTask();
-        if(test.equals("success")){
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/geneticalgorithm/view/experimentView.fxml"));
-                AnchorPane scene = fxmlLoader.load();
-                Stage resultStage = new Stage();
-                resultStage.setTitle("Дослідження");
-                resultStage.setScene(new Scene(scene, 495, 281));
-                resultStage.setResizable(false);
-                resultStage.initModality(Modality.APPLICATION_MODAL);
-                Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
-                resultStage.getIcons().add(icon);
-                ExperimentController experimentController = fxmlLoader.<ExperimentController>getController();
-                experimentController.setMainTask(GASolver.getInstance().getTask());
-                resultStage.showAndWait();
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-        }else{
-            AlertBox.display("Помилка", test);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/geneticalgorithm/view/experimentView.fxml"));
+            AnchorPane scene = fxmlLoader.load();
+            Stage resultStage = new Stage();
+            resultStage.setTitle("Дослідження");
+            resultStage.setScene(new Scene(scene, 495, 281));
+            resultStage.setResizable(false);
+            resultStage.initModality(Modality.APPLICATION_MODAL);
+            Image icon = new Image("/geneticalgorithm/resources/ico/app.png");
+            resultStage.getIcons().add(icon);
+            resultStage.showAndWait();
+        }catch (IOException e){
+            e.printStackTrace();
         }
+
     }
 
     /**
