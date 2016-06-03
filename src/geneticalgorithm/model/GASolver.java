@@ -332,7 +332,7 @@ public class GASolver {
                 weight += task.getThings().get(i).getWeight();
                 utility += task.getThings().get(i).getUtility();
             }
-        }
+            }
         parent.setWeight(weight);
         parent.setUtility(utility);
     }

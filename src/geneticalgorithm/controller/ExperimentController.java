@@ -61,6 +61,10 @@ public class ExperimentController {
     }
 
     private void experiment(){
+        if(!validate().equals("success")){
+            AlertBox.display("Помилка", validate());
+            return;
+        }
         gaSolver = GASolver.getInstance();
         List<Integer> answers1 = new ArrayList<>();
         List<Integer> answers2 = new ArrayList<>();

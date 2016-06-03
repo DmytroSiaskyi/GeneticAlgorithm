@@ -22,8 +22,8 @@ public class Panmixia implements ParentsChoice{
         int secondNumber;
         do {
             secondNumber = random.nextInt(parents.size() - 1);
-        }while (genNumber != secondNumber);
-        second = parents.get(genNumber);
+        }while (genNumber == secondNumber);
+        second = parents.get(secondNumber);
         result.add(new Parent(second));
         return result;
     }
