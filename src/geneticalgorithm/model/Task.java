@@ -164,7 +164,7 @@ public class Task implements Cloneable{
      *
      * @param numberOfThings
      */
-    private Parent generateParent(int numberOfThings){
+    public Parent generateParent(int numberOfThings){
         Random random = new Random();
         Parent result;
         int weight = 0;

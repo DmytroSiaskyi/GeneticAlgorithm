@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Dmytro Siaskyi dmitry.syaskiy@gmail.com.
@@ -35,6 +38,25 @@ public class ParentTest {
     public void testCopyConstructor() throws Exception {
         Parent testParent = new Parent(parent);
         assertEquals("Copy constructor returned not equal object(Parent)", parent, testParent);
+        assertNotSame("Copy constructor returned same object", parent, testParent);
+        try{
+            testParent = new Parent(null);
+            fail("Copy constructor failed with null parameter");
+        }catch (NullPointerException e){
+            testParent = null;
+        }
     }
 
+    @Test
+    public void testConstructorWithParameters() throws Exception {
+        Parent testParent = new Parent(parent.getChromosome(), parent.getWeight(), parent.getUtility());
+        assertEquals("Constructor returned not equal object(Parent)", parent, testParent);
+        assertNotSame("Constructor returned same object", parent, testParent);
+    }
+
+    @Test
+    public void testEqualsMethod() throws Exception {
+        Parent testParent = new Parent(parent);
+        assertTrue("Failed equals method)", parent.equals(testParent));
+    }
 }
